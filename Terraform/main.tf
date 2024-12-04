@@ -117,12 +117,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "vmss-example"
   location            = azurerm_resource_group.resource_group.location
   resource_group_name = azurerm_resource_group.resource_group.name
-
-  os_profile {
-    computer_name_prefix = "myvm"
-    admin_username       = "myadmin"
-    admin_password      = "MyP@ssw0rd2024!"
-  }
+  admin_username       = "myadmin"
 
   instances = 2
   sku       = "Standard_DS1_v2"
@@ -138,6 +133,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
+
+  disable_password_authentication = false
 
   network_interface {
     name    = "vmss-nic"
