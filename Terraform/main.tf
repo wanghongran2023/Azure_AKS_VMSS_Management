@@ -148,7 +148,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
       primary                                = true
       subnet_id                              = azurerm_subnet.subnet.id
       load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.lb_backend_pool.id]
-      public_ip_address_configuration {
+      public_ip_address {
         name = "vmss-instance-pip"
         idle_timeout_in_minutes = 4
       }
