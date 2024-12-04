@@ -210,7 +210,7 @@ resource "azurerm_virtual_machine_scale_set" "example" {
 
     settings = <<SETTINGS
       {
-        "commandToExecute": "sudo apt-get update && sudo apt-get install -y nginx && sudo systemctl start nginx"
+        "commandToExecute": "sudo apt-get update && sudo apt-get install -y nginx"
       }
     SETTINGS
   }
