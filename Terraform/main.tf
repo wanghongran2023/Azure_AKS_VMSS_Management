@@ -118,11 +118,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   location            = azurerm_resource_group.resource_group.location
   resource_group_name = azurerm_resource_group.resource_group.name
   admin_username      = "azureuser"
-
-  admin_ssh_key {
-    username   = "azureuser"
-    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCxglUKLTrAghCTJhqb3BpatEz9fIyEX6YW3EdEY0thRWmjEdH3bNyypRlQw5bqKPFhTuiZ4WxbIhToCRP8PBn5ZxVPh5Urbnph03JkM/8gxkMerYVYu64bpoj95iE7ZhPJ8AKoObeCm2D7GupaWmJJ90WwLQgf6/Z/yFMoyCSDJrpq7d3RYvatGuKI/4hXTRih5vD6iJQsQ9yrmWlgcqzYZNQGf8vM13CwZFZgWm/LbcrG++dEtdEIytT5XeR0POaDVQmwRetPs104ulku2s4PETBa5bpqnwgwV7ICZxsU3yWMxJ1C8bhEJcTxQ5lWPNu5v49oD23NYkvyYtnZuba2HZ6KcfMhbbpfke9MPeiO3GYUN0G9czPpkfzJgSHcD44awQE5WZClCpZJvnZkrOxkOYbCk0IywJiVhKYNUV0LrxwffJnod9odMfzkHaSnEz9fbt1EltPFQBMjwv5d+zn09R4yBAV3e4h1qsnqkGb7C2FmwFVtxO/Qx4K0BHhQtjjx6WJ4B/0RMvV2n9r9T6DOqlqzxt9lPEIQaexFUnywyvWUjY0qDudHtMCrawBnjJ7azXV7ZwT+aOAc3+nMRS330I6e1yWjXWvmKvhQNBweveustDIjRtCsPyGyQsQMc5wYsY98tDDyVD64xtPaHvVEmHeq/VUpXTvk5m5ljtnwMQ== ubuntu@ip-192-168-55-188"
-  }
+  admin_password      = "StrongPassword123!"
 
   instances = 2
   sku       = "Standard_DS1_v2"
@@ -148,10 +144,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
       primary                                = true
       subnet_id                              = azurerm_subnet.subnet.id
       load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.lb_backend_pool.id]
-      public_ip_address {
-        name = "vmss-instance-pip"
-        idle_timeout_in_minutes = 4
-      }
     }
   }
 
