@@ -149,58 +149,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
       load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.lb_backend_pool.id]
     }
   }
-provider "azurerm" {
-
-resource "azurerm_virtual_machine_scale_set" "example" {
-  name                = "example-vmss"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
-  upgrade_policy_mode = "Automatic"
-
-  sku {
-    name     = "Standard_B1ls"
-    tier     = "Standard"
-    capacity = 2
-  }
-
-  network_profile {
-    name    = "networkprofile"
-    primary = true
-
-    ip_configuration {
-      name                                   = "ipconfig"
-      subnet_id                              = azurerm_subnet.example.id
-      load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.example.id]
-      primary                                = true
-    }
-  }
-
-  os_profile {
-    computer_name_prefix = "vmss"
-    admin_username       = "azureuser"
-    admin_password       = "P@ssw0rd1234"
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
-
-  storage_profile_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
-  }
-
-  storage_profile_os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-    disk_size_gb         = 30
-  }
-
-  boot_diagnostics {
-    enabled = true
-  }
 
   extension {
     name                 = "InstallNGINX"
@@ -214,7 +162,6 @@ resource "azurerm_virtual_machine_scale_set" "example" {
       }
     SETTINGS
   }
-
 
   tags = {
     environment = "Test"
