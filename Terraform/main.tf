@@ -32,6 +32,7 @@ resource "azurerm_subnet" "subnet" {
   name                 = "udacity-vmss-vnet-subnet"
   resource_group_name  = azurerm_resource_group.resource_group.name
   virtual_network_name = azurerm_virtual_network.vnet.name
+  network_security_group_id = azurerm_network_security_group.nsg.id
   address_prefixes     = ["10.0.1.0/24"]
 }
 
@@ -74,7 +75,7 @@ resource "azurerm_public_ip" "lb_public_ip" {
 }
 
 resource "azurerm_lb" "lb" {
-  name                = "vmss-example-lb"
+  name                = "udacity-vmss-lb"
   location            = azurerm_resource_group.resource_group.location
   resource_group_name = azurerm_resource_group.resource_group.name
   sku                 = "Standard"
@@ -85,12 +86,12 @@ resource "azurerm_lb" "lb" {
 }
 
 resource "azurerm_lb_backend_address_pool" "lb_backend_pool" {
-  name                = "backend-pool"
+  name                = "udacity-vmss-backend-pool"
   loadbalancer_id     = azurerm_lb.lb.id
 }
 
 resource "azurerm_lb_probe" "lb_http_probe" {
-  name                = "http-probe"
+  name                = "udacity-vmss-http-probe"
   loadbalancer_id     = azurerm_lb.lb.id
   protocol            = "Http"
   port                = 80
@@ -100,7 +101,7 @@ resource "azurerm_lb_probe" "lb_http_probe" {
 }
 
 resource "azurerm_lb_rule" "lb_http_rule" {
-  name                           = "http-rule"
+  name                           = "udacity-vmss-http-rule"
   loadbalancer_id                = azurerm_lb.lb.id
   protocol                       = "Tcp"
   frontend_port                  = 80
@@ -114,7 +115,7 @@ resource "azurerm_lb_rule" "lb_http_rule" {
 
 
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
-  name                = "vmss-example"
+  name                = "udacity-vmss"
   location            = azurerm_resource_group.resource_group.location
   resource_group_name = azurerm_resource_group.resource_group.name
 
