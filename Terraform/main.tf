@@ -67,8 +67,8 @@ resource "azurerm_network_security_group" "nsg" {
 
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "vmss-example"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.resource_group.location
+  resource_group_name = azurerm_resource_group.resource_group.name
   admin_username      = "azureuser"
   admin_password      = "Password1234!"
   instances           = 2
