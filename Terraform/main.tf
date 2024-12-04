@@ -117,7 +117,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "vmss-example"
   location            = azurerm_resource_group.resource_group.location
   resource_group_name = azurerm_resource_group.resource_group.name
+
   admin_username       = "myadmin"
+  admin_password       = "MyP@ssw0rd123!"
 
   instances = 2
   sku       = "Standard_DS1_v2"
