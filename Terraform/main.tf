@@ -25,12 +25,14 @@ module "network" {
   source = "./network"
   resource_group_name=azurerm_resource_group.resource_group.name
   resource_group_location=azurerm_resource_group.resource_group.location
+  resource_header="udacity-vmss"
 }
 
 module "loadbalancer" {
   source = "./loadbalancer"
   resource_group_name=azurerm_resource_group.resource_group.name
   resource_group_location=azurerm_resource_group.resource_group.location
+  resource_header="udacity-vmss"
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
