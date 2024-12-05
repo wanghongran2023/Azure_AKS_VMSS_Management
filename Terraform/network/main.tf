@@ -1,3 +1,14 @@
+resource "azurerm_virtual_network" "vnet" {
+  name                = "udacity-vmss-vnet"
+  location            = azurerm_resource_group.resource_group.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+  address_space       = ["10.0.1.0/16"]
+
+  tags = {
+    environment = var.environment
+  }
+}
+
 resource "azurerm_subnet" "subnet" {
   name                 = "udacity-vmss-vnet-subnet"
   resource_group_name  = azurerm_resource_group.resource_group.name
