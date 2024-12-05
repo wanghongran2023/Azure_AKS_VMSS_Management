@@ -7,3 +7,8 @@ variable "resource_group_location" {
   description = "The location of the resource group"
   type        = string
 }
+
+variable "resource_header" {
+  description = "The Header of the resource name"
+  type        = string
+}
