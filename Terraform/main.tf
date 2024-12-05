@@ -80,6 +80,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   disable_password_authentication = false
 
   network_interface {
+    name="vmss-nic"
     primary = true
 
     ip_configuration {
