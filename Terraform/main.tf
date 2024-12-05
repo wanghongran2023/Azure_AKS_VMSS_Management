@@ -99,6 +99,51 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     SETTINGS
   }
 
+  extension {
+    name                 = "AzureDiagnostics"
+    publisher            = "Microsoft.Azure.Diagnostics"
+    type                 = "LinuxDiagnostic"
+    type_handler_version = "4.0"
+
+    settings = <<SETTINGS
+    {
+        "ladCfg": {
+            "diagnosticMonitorConfiguration": {
+                "performanceCounters": {
+                    "performanceCounterConfiguration": [
+                        {
+                            "counterSpecifier": "\\Processor(_Total)\\% Processor Time",
+                            "sampleRateInSeconds": 10
+                        },
+                        {
+                            "counterSpecifier": "\\Memory\\Available Bytes",
+                            "sampleRateInSeconds": 10
+                        }
+                    ]
+                },
+                "sinksConfig": {
+                    "sink": [
+                        {
+                            "name": "applicationInsights",
+                            "applicationInsightsConfiguration": {
+                                "instrumentationKey": "${azurerm_application_insights.example.instrumentation_key}"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+    SETTINGS
+
+    protected_settings = <<PROTECTED_SETTINGS
+    {
+        "storageAccountName": module.storageaccount.,
+        "storageAccountKey":  module.storageaccount.
+    }
+    PROTECTED_SETTINGS
+  }
+
   tags = {
     environment = "Test"
   }
