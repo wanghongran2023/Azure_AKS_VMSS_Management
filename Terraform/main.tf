@@ -21,6 +21,11 @@ resource "azurerm_resource_group" "resource_group" {
   location = var.resource_group_config.location
 }
 
+data "azurerm_log_analytics_workspace" "example" {
+  name                = "loganalytics-270342"
+  resource_group_name = "cloud-demo"
+}
+
 module "network" {
   source = "./network"
   resource_group_name=azurerm_resource_group.resource_group.name
@@ -40,6 +45,8 @@ module "applicationinsight" {
   resource_group_name=azurerm_resource_group.resource_group.name
   resource_group_location=azurerm_resource_group.resource_group.location
   resource_header="wangudacity-vmss"
+  resource_header="wangudacity-vmss"
+  resource_header="wangudacity-vmss"
 }
 
 module "storageaccount" {
@@ -49,21 +56,6 @@ module "storageaccount" {
   resource_header="wangudacity"
 }
 
-data "azurerm_log_analytics_workspace" "example" {
-  name                = "loganalytics-270342"
-  resource_group_name = "cloud-demo"
-}
-
-resource "azurerm_monitor_diagnostic_setting" "example" {
-  name                       = "example-diagnostics-setting"
-  target_resource_id         = azurerm_linux_virtual_machine_scale_set.vmss.id
-  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.example.id
-
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-  }
-}
 
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "udacity-vmss"
@@ -113,16 +105,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     })
   }
 
-  extension {
-    name                 = "InstallAMA"
-    publisher            = "Microsoft.Azure.Extensions"
-    type                 = "CustomScript"
-    type_handler_version = "2.0"
-
-    settings = jsonencode({
-      commandToExecute = "sudo apt update && sudo apt-get install azure-moniotoring-agent"
-    })
-  }
 
   tags = {
     environment = "Test"
