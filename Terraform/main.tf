@@ -92,6 +92,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     pause_time_between_batches              = "PT600S"
   }
   disable_password_authentication = false
+  health_probe_id = module.loadbalancer.lb_http_probe_id
 
   network_interface {
     name="vmss-nic"
