@@ -120,7 +120,7 @@ resource "azurerm_virtual_machine_scale_set_extension" "vmss_ext_mma" {
   type_handler_version         = "1.0"
   
   protected_settings = jsonencode({
-    "workspaceKey" = "${azurerm_log_analytics_workspace.law.primary_shared_key}"
+    "workspaceKey" = "${data.azurerm_log_analytics_workspace.example.primary_shared_key}"
   })
 
   settings = jsonencode({
