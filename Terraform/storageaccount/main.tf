@@ -1,9 +1,9 @@
 resource "azurerm_storage_account" "storage_account" {
-  name                     = "storageaccount"
-  resource_group_name      = azurerm_resource_group.example.name
-  location                 = azurerm_resource_group.example.location
+  name                = "${var.resource_header}-storageaccount"
+  location            = var.resource_group_location
+  resource_group_name = var.resource_group_name
   account_tier             = "Standard"
-  account_replication_type = "LRS" # Locally-redundant storage (LRS)
+  account_replication_type = "LRS"
 
   tags = {
     environment = "Test"
