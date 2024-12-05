@@ -2,7 +2,7 @@ resource "azurerm_virtual_network" "vnet" {
   name                = "udacity-vmss-vnet"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
-  address_space       = ["10.0.1.0/16"]
+  address_space       = ["10.0.0.0/16"]
 
   tags = {
     environment = "Test"
