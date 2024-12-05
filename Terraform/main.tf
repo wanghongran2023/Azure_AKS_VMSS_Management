@@ -65,11 +65,6 @@ resource "azurerm_monitor_diagnostic_setting" "example" {
   }
 
   log {
-    category = "AuditLogs"
-    enabled  = true
-  }
-
-  log {
     category = "OperationalLogs"
     enabled  = true
   }
