@@ -63,11 +63,6 @@ resource "azurerm_monitor_diagnostic_setting" "example" {
     category = "AllMetrics"
     enabled  = true
   }
-
-  log {
-    category = "OperationalLogs"
-    enabled  = true
-  }
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
