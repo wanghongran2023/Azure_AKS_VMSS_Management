@@ -1,15 +1,15 @@
 resource "azurerm_public_ip" "lb_public_ip" {
   name                = "vmss-lb-public-ip"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = var.resource_group_location
+  resource_group_name = var.resource_group_name
   allocation_method   = "Static"
   sku                 = "Standard"
 }
 
 resource "azurerm_lb" "lb" {
   name                = "udacity-vmss-lb"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = var.resource_group_location
+  resource_group_name = var.resource_group_name
   sku                 = "Standard"
   frontend_ip_configuration {
     name                 = "frontend"
