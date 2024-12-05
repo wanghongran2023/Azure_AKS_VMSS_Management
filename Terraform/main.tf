@@ -22,7 +22,7 @@ resource "azurerm_resource_group" "resource_group" {
 }
 
 module "network" {
-  source = "./main.tf"
+  source = "./network"
 }
 
 resource "azurerm_public_ip" "lb_public_ip" {
