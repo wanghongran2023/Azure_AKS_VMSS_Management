@@ -80,7 +80,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   disable_password_authentication = false
 
   network_interface {
-    name    = "vmss-nic"
     primary = true
 
     ip_configuration {
@@ -97,18 +96,16 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     type                 = "CustomScript"
     type_handler_version = "2.0"
 
-    settings = <<SETTINGS
-      {
-        "commandToExecute": "sudo apt-get update && sudo apt-get install -y nginx"
-      }
-    SETTINGS
+    settings = jsonencode({
+      commandToExecute = "sudo apt update && sudo apt install -y nginx"
+    })
   }
 
   extension {
     name                 = "AzureMonitorLinuxAgent"
     publisher            = "Microsoft.EnterpriseCloud.Monitoring"
     type                 = "OmsAgentForLinux"
-    type_handler_version = "1.0"
+    type_handler_version = "1.19.0"
 
     protected_settings = jsonencode({
       workspaceId  = data.azurerm_log_analytics_workspace.example.workspace_id
@@ -116,43 +113,30 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     })
   }
 
-
   extension {
     name                 = "AzureDiagnostics"
     publisher            = "Microsoft.Azure.Diagnostics"
     type                 = "LinuxDiagnostic"
     type_handler_version = "4.0"
 
-    settings = <<SETTINGS
-    {
-        "ladCfg": {
-            "diagnosticMonitorConfiguration": {
-                "performanceCounters": {
-                    "performanceCounterConfiguration": [
-                        {
-                            "counterSpecifier": "\\Processor(_Total)\\% Processor Time",
-                            "sampleRateInSeconds": 10
-                        },
-                        {
-                            "counterSpecifier": "\\Memory\\Available Bytes",
-                            "sampleRateInSeconds": 10
-                        }
-                    ]
-                },
-                "sinksConfig": {
-                    "sink": [
-                        {
-                            "name": "applicationInsights",
-                            "applicationInsightsConfiguration": {
-                                "instrumentationKey": "${module.applicationinsight.instrumentation_key}"
-                            }
-                        }
-                    ]
-                }
-            }
+    settings = jsonencode({
+      ladCfg = {
+        diagnosticMonitorConfiguration = {
+          performanceCounters = {
+            performanceCounterConfiguration = [
+              {
+                counterSpecifier   = "\\Processor(_Total)\\% Processor Time"
+                sampleRateInSeconds = 10
+              },
+              {
+                counterSpecifier   = "\\Memory\\Available Bytes"
+                sampleRateInSeconds = 10
+              }
+            ]
+          }
         }
-    }
-    SETTINGS
+      }
+    })
 
     protected_settings = jsonencode({
       storageAccountName = module.storageaccount.storage_account_name
