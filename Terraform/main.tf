@@ -51,7 +51,7 @@ module "storageaccount" {
 
 data "azurerm_log_analytics_workspace" "example" {
   name                = "loganalytics-270334"
-  resource_group_name = azurerm_resource_group.resource_group.name
+  resource_group_name = "cloud-demo"
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
