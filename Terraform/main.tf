@@ -49,6 +49,11 @@ module "storageaccount" {
   resource_header="wangudacity"
 }
 
+data "azurerm_log_analytics_workspace" "example" {
+  name                = "loganalytics-270332"
+  resource_group_name = azurerm_resource_group.resource_group.name
+}
+
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "udacity-vmss"
   location            = azurerm_resource_group.resource_group.location
@@ -98,6 +103,21 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
       }
     SETTINGS
   }
+
+  extension {
+    name                 = "AzureMonitorLinuxAgent"
+    publisher            = "Microsoft.EnterpriseCloud.Monitoring"
+    type                 = "OmsAgentForLinux"
+    type_handler_version = "1.0"
+
+    protected_settings = <<PROTECTED_SETTINGS
+    {
+      "workspaceId": "${data.azurerm_log_analytics_workspace.example.workspace_id}",
+      "workspaceKey": "${data.azurerm_log_analytics_workspace.example.primary_shared_key}"
+    }
+    PROTECTED_SETTINGS
+  }
+
 
   extension {
     name                 = "AzureDiagnostics"
