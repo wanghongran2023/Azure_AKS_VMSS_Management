@@ -1,0 +1,31 @@
+name: Update File Example
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to main
+
+jobs:
+  update-file:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Modify a file (e.g., update a text file)
+    - name: Modify file
+      run: |
+        echo "New content added by GitHub Actions" >> file.txt
+
+    # Step 3: Commit changes
+    - name: Commit changes
+      run: |
+        git config --global user.name "Your Name"
+        git config --global user.email "youremail@example.com"
+        git add file.txt
+        git commit -m "Update file.txt with new content"
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub automatically provides this token
