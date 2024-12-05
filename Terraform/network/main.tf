@@ -13,7 +13,6 @@ resource "azurerm_subnet" "subnet" {
   name                 = "udacity-vmss-vnet-subnet"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  network_security_group_id = azurerm_network_security_group.nsg.id
   address_prefixes     = ["10.0.1.0/24"]
 }
 
@@ -45,4 +44,9 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
+  subnet_id                 = azurerm_subnet.subnet.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
 }
