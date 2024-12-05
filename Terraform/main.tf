@@ -85,6 +85,12 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     disable_automatic_rollback  = false
     enable_automatic_os_upgrade = true
   }
+  rolling_upgrade_policy {
+    max_batch_instance_percent              = "20"
+    max_unhealthy_instance_percent          = "20"
+    max_unhealthy_upgraded_instance_percent = "20"
+    pause_time_between_batches              = "PT600S"
+  }
   disable_password_authentication = false
 
   network_interface {
