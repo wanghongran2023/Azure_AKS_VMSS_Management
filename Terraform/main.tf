@@ -21,20 +21,8 @@ resource "azurerm_resource_group" "resource_group" {
   location = var.resource_group_config.location
 }
 
-data "azurerm_log_analytics_workspace" "example" {
-  name                = "loganalytics-270345"
-  resource_group_name = "cloud-demo"
-}
-
 module "network" {
   source = "./network"
-  resource_group_name=azurerm_resource_group.resource_group.name
-  resource_group_location=azurerm_resource_group.resource_group.location
-  resource_header="wangudacity-vmss"
-}
-
-module "loadbalancer" {
-  source = "./loadbalancer"
   resource_group_name=azurerm_resource_group.resource_group.name
   resource_group_location=azurerm_resource_group.resource_group.location
   resource_header="wangudacity-vmss"
@@ -80,19 +68,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     storage_account_type = "Standard_LRS"
   }
 
-  upgrade_mode    = "Rolling"
-  automatic_os_upgrade_policy {
-    disable_automatic_rollback  = false
-    enable_automatic_os_upgrade = true
-  }
-  rolling_upgrade_policy {
-    max_batch_instance_percent              = "20"
-    max_unhealthy_instance_percent          = "20"
-    max_unhealthy_upgraded_instance_percent = "20"
-    pause_time_between_batches              = "PT600S"
-  }
   disable_password_authentication = false
-  health_probe_id = module.loadbalancer.lb_http_probe_id
 
   network_interface {
     name="vmss-nic"
@@ -123,34 +99,3 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   }
 }
 
-resource "azurerm_virtual_machine_scale_set_extension" "vmss_ext_mma" {
-  virtual_machine_scale_set_id = azurerm_linux_virtual_machine_scale_set.vmss.id
-  auto_upgrade_minor_version   = true
-  name                         = "MicrosoftMonitoringAgent"
-  publisher                    = "Microsoft.EnterpriseCloud.Monitoring"
-  type                         = "MicrosoftMonitoringAgent"
-  type_handler_version         = "1.0"
-  
-  protected_settings = jsonencode({
-    "workspaceKey" = "${data.azurerm_log_analytics_workspace.example.primary_shared_key}"
-  })
-
-  settings = jsonencode({
-    "workspaceId"               = "${data.azurerm_log_analytics_workspace.example.id}",
-    "stopOnMultipleConnections" = true
-  })
-}
-
-resource "azurerm_virtual_machine_scale_set_extension" "vmss_ext_da" {
-  virtual_machine_scale_set_id = azurerm_linux_virtual_machine_scale_set.vmss.id
-  auto_upgrade_minor_version   = true
-  name                         = "DependencyAgentLinux"
-  publisher                    = "Microsoft.Azure.Monitoring.DependencyAgent"
-  type                         = "DependencyAgentWindows"
-  type_handler_version         = "9.10"
-  provision_after_extensions = [azurerm_virtual_machine_scale_set_extension.vmss_ext_mma.name]
-
-  settings = jsonencode({
-    "enableAutomaticUpgrade" = true
-  })
-}
