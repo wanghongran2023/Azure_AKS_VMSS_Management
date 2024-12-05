@@ -110,12 +110,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     type                 = "OmsAgentForLinux"
     type_handler_version = "1.0"
 
-    protected_settings = <<PROTECTED_SETTINGS
-    {
-      "workspaceId": "${data.azurerm_log_analytics_workspace.example.workspace_id}",
-      "workspaceKey": "${data.azurerm_log_analytics_workspace.example.primary_shared_key}"
-    }
-    PROTECTED_SETTINGS
+    protected_settings = jsonencode({
+      workspaceId  = data.azurerm_log_analytics_workspace.example.workspace_id
+      workspaceKey = data.azurerm_log_analytics_workspace.example.primary_shared_key
+    })
   }
 
 
@@ -156,12 +154,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     }
     SETTINGS
 
-    protected_settings = <<PROTECTED_SETTINGS
-    {
-        "storageAccountName": module.storageaccount.storage_account_name,
-        "storageAccountKey":  module.storageaccount.storage_account_primary_key
-    }
-    PROTECTED_SETTINGS
+    protected_settings = jsonencode({
+      storageAccountName = module.storageaccount.storage_account_name
+      storageAccountKey  = module.storageaccount.storage_account_primary_key
+    })
   }
 
   tags = {
