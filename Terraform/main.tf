@@ -95,7 +95,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     name                 = "InstallNGINX"
     publisher            = "Microsoft.Azure.Extensions"
     type                 = "CustomScript"
-    type_handler_version = "2.1"
+    type_handler_version = "2.0"
 
     settings = jsonencode({
       commandToExecute = "sudo apt update && sudo apt install -y nginx"
@@ -106,7 +106,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     name                 = "AzureMonitorLinuxAgent"
     publisher            = "Microsoft.EnterpriseCloud.Monitoring"
     type                 = "OmsAgentForLinux"
-    type_handler_version = "1.19.0"
+    type_handler_version = "1.11"
 
     protected_settings = jsonencode({
       workspaceId  = data.azurerm_log_analytics_workspace.example.workspace_id
