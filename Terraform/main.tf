@@ -22,7 +22,7 @@ resource "azurerm_resource_group" "resource_group" {
 }
 
 data "azurerm_log_analytics_workspace" "example" {
-  name                = "loganalytics-270342"
+  name                = "loganalytics-270345"
   resource_group_name = "cloud-demo"
 }
 
