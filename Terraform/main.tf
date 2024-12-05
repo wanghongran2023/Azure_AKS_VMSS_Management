@@ -50,7 +50,7 @@ module "storageaccount" {
 }
 
 data "azurerm_log_analytics_workspace" "example" {
-  name                = "loganalytics-270334"
+  name                = "loganalytics-270342"
   resource_group_name = "cloud-demo"
 }
 
