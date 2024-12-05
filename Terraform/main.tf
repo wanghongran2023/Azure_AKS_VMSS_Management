@@ -23,6 +23,8 @@ resource "azurerm_resource_group" "resource_group" {
 
 module "network" {
   source = "./network"
+  resource_group_name=azurerm_resource_group.resource_group.name
+  resource_group_location=azurerm_resource_group.resource_group.location
 }
 
 resource "azurerm_public_ip" "lb_public_ip" {
