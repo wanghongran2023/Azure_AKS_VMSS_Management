@@ -30,7 +30,7 @@ logger.addHandler(handler)
 
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
-    enable_standard_metrics=true,
+    enable_standard_metrics=True,
     connection_string="InstrumentationKey=89ab3c6c-06a0-43ba-b1fd-ff1a1fc835c5;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=4a138c5c-7ff8-443b-a678-b585507ce1f9"
 )
 
