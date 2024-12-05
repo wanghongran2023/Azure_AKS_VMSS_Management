@@ -33,9 +33,6 @@ module "loadbalancer" {
   resource_group_location=azurerm_resource_group.resource_group.location
 }
 
-
-
-
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "udacity-vmss"
   location            = azurerm_resource_group.resource_group.location
