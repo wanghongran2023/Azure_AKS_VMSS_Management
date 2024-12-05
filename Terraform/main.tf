@@ -113,22 +113,21 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     })
   }
 
-  extension {
-    name                 = "AzureMonitorLinuxAgent"
-    publisher            = "Microsoft.EnterpriseCloud.Monitoring"
-    type                 = "OmsAgentForLinux"
-    type_handler_version = "1.19"
-
-    settings = jsonencode({
-      workspaceId = data.azurerm_log_analytics_workspace.example.workspace_id
-    })
-
-    protected_settings = jsonencode({
-      workspaceKey = data.azurerm_log_analytics_workspace.example.primary_shared_key
-    })
-  }
-
   tags = {
     environment = "Test"
   }
+}
+
+resource "azurerm_virtual_machine_scale_set_extension" "example" {
+  name                        = "enable-ama"
+  virtual_machine_scale_set_id = azurerm_virtual_machine_scale_set.vmss.id
+  publisher                   = "Microsoft.Azure.Monitor"
+  type                        = "CustomScript"
+  type_handler_version        = "1.10"
+
+  settings = <<SETTINGS
+  {
+    "scriptUri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-monitor-virtual-machines/scripts/enable-monitoring.sh"
+  }
+  SETTINGS
 }
