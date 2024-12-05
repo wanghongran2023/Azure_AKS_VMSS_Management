@@ -106,10 +106,13 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     name                 = "AzureMonitorLinuxAgent"
     publisher            = "Microsoft.EnterpriseCloud.Monitoring"
     type                 = "OmsAgentForLinux"
-    type_handler_version = "1.11"
+    type_handler_version = "1.19"
+
+    settings = jsonencode({
+      workspaceId = data.azurerm_log_analytics_workspace.example.workspace_id
+    })
 
     protected_settings = jsonencode({
-      workspaceId  = data.azurerm_log_analytics_workspace.example.workspace_id
       workspaceKey = data.azurerm_log_analytics_workspace.example.primary_shared_key
     })
   }
