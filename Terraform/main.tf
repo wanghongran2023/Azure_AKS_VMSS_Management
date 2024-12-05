@@ -45,8 +45,8 @@ module "applicationinsight" {
   resource_group_name=azurerm_resource_group.resource_group.name
   resource_group_location=azurerm_resource_group.resource_group.location
   resource_header="wangudacity-vmss"
-  resource_header="wangudacity-vmss"
-  resource_header="wangudacity-vmss"
+  log_analytics_workspace_id=data.azurerm_log_analytics_workspace.example.id
+  log_analytics_workspace_name=data.azurerm_log_analytics_workspace.example.name
 }
 
 module "storageaccount" {
