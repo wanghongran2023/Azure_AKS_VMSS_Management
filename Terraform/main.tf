@@ -126,7 +126,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
                         {
                             "name": "applicationInsights",
                             "applicationInsightsConfiguration": {
-                                "instrumentationKey": "${azurerm_application_insights.example.instrumentation_key}"
+                                "instrumentationKey": "${module.applicationinsight.instrumentation_key}"
                             }
                         }
                     ]
@@ -138,8 +138,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
 
     protected_settings = <<PROTECTED_SETTINGS
     {
-        "storageAccountName": module.storageaccount.,
-        "storageAccountKey":  module.storageaccount.
+        "storageAccountName": module.storageaccount.storage_account_name,
+        "storageAccountKey":  module.storageaccount.storage_account_primary_key
     }
     PROTECTED_SETTINGS
   }
