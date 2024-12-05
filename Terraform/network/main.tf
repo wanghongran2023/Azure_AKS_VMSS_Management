@@ -1,7 +1,7 @@
 resource "azurerm_virtual_network" "vnet" {
   name                = "udacity-vmss-vnet"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = var.resource_group_location
+  resource_group_name = var.resource_group_name
   address_space       = ["10.0.1.0/16"]
 
   tags = {
@@ -11,7 +11,7 @@ resource "azurerm_virtual_network" "vnet" {
 
 resource "azurerm_subnet" "subnet" {
   name                 = "udacity-vmss-vnet-subnet"
-  resource_group_name  = azurerm_resource_group.resource_group.name
+  resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   network_security_group_id = azurerm_network_security_group.nsg.id
   address_prefixes     = ["10.0.1.0/24"]
@@ -19,8 +19,8 @@ resource "azurerm_subnet" "subnet" {
 
 resource "azurerm_network_security_group" "nsg" {
   name                = "udacity-vmss-nsg"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = var.resource_group_location
+  resource_group_name = var.resource_group_name
 
   security_rule {
     name                       = "AllowSSH"
