@@ -95,7 +95,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     name                 = "InstallNGINX"
     publisher            = "Microsoft.Azure.Extensions"
     type                 = "CustomScript"
-    type_handler_version = "2.0"
+    type_handler_version = "2.1"
 
     settings = jsonencode({
       commandToExecute = "sudo apt update && sudo apt install -y nginx"
@@ -118,7 +118,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     name                 = "AzureDiagnostics"
     publisher            = "Microsoft.Azure.Diagnostics"
     type                 = "LinuxDiagnostic"
-    type_handler_version = "4.0"
+    type_handler_version = "3.0"
 
     settings = jsonencode({
       ladCfg = {
