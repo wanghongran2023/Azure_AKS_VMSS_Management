@@ -54,6 +54,27 @@ data "azurerm_log_analytics_workspace" "example" {
   resource_group_name = "cloud-demo"
 }
 
+resource "azurerm_monitor_diagnostic_setting" "example" {
+  name                       = "example-diagnostics-setting"
+  target_resource_id         = azurerm_linux_virtual_machine_scale_set.vmss.id
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.example.id
+
+  metric {
+    category = "AllMetrics"
+    enabled  = true
+  }
+
+  log {
+    category = "AuditLogs"
+    enabled  = true
+  }
+
+  log {
+    category = "OperationalLogs"
+    enabled  = true
+  }
+}
+
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "udacity-vmss"
   location            = azurerm_resource_group.resource_group.location
