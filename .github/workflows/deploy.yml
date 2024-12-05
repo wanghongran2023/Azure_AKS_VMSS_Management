@@ -44,5 +44,6 @@ jobs:
         run: |
           terraform init
           terraform validate
+          terraform fmt
           terraform plan -var-file=variables.tfvars
           terraform apply -auto-approve -var-file=variables.tfvars
