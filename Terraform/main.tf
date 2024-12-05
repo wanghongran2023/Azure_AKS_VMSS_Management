@@ -113,21 +113,19 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     })
   }
 
+  extension {
+    name                 = "InstallAMA"
+    publisher            = "Microsoft.Azure.Extensions"
+    type                 = "CustomScript"
+    type_handler_version = "2.0"
+
+    settings = jsonencode({
+      commandToExecute = "sudo apt update && sudo apt-get install azure-moniotoring-agent"
+    })
+  }
+
   tags = {
     environment = "Test"
   }
 }
 
-resource "azurerm_virtual_machine_scale_set_extension" "example" {
-  name                        = "enable-ama"
-  virtual_machine_scale_set_id = azurerm_virtual_machine_scale_set.vmss.id
-  publisher                   = "Microsoft.Azure.Monitor"
-  type                        = "CustomScript"
-  type_handler_version        = "1.10"
-
-  settings = <<SETTINGS
-  {
-    "scriptUri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-monitor-virtual-machines/scripts/enable-monitoring.sh"
-  }
-  SETTINGS
-}
