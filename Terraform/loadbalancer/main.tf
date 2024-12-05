@@ -1,5 +1,5 @@
 resource "azurerm_public_ip" "lb_public_ip" {
-  name                = "vmss-lb-public-ip"
+  name                = "lb-public-ip"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
@@ -7,7 +7,7 @@ resource "azurerm_public_ip" "lb_public_ip" {
 }
 
 resource "azurerm_lb" "lb" {
-  name                = "udacity-vmss-lb"
+  name                = "lb"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
   sku                 = "Standard"
@@ -18,12 +18,12 @@ resource "azurerm_lb" "lb" {
 }
 
 resource "azurerm_lb_backend_address_pool" "lb_backend_pool" {
-  name                = "udacity-vmss-backend-pool"
+  name                = "lb-backend-pool"
   loadbalancer_id     = azurerm_lb.lb.id
 }
 
 resource "azurerm_lb_probe" "lb_http_probe" {
-  name                = "udacity-vmss-http-probe"
+  name                = "lb-http-probe"
   loadbalancer_id     = azurerm_lb.lb.id
   protocol            = "Http"
   port                = 80
@@ -33,7 +33,7 @@ resource "azurerm_lb_probe" "lb_http_probe" {
 }
 
 resource "azurerm_lb_rule" "lb_http_rule" {
-  name                           = "udacity-vmss-http-rule"
+  name                           = "lb-http-rule"
   loadbalancer_id                = azurerm_lb.lb.id
   protocol                       = "Tcp"
   frontend_port                  = 80
