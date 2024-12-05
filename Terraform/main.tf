@@ -114,45 +114,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     })
   }
 
-extension {
-  name                 = "AzureDiagnostics"
-  publisher            = "Microsoft.Azure.Diagnostics"
-  type                 = "LinuxDiagnostic"
-  type_handler_version = "4.0" # Use the latest stable version
-
-  settings = jsonencode({
-    ladCfg = {
-      diagnosticMonitorConfiguration = {
-        performanceCounters = {
-          performanceCounterConfiguration = [
-            {
-              counterSpecifier   = "\\Processor(_Total)\\% Processor Time"
-              sampleRateInSeconds = 10
-            },
-            {
-              counterSpecifier   = "\\Memory\\Available Bytes"
-              sampleRateInSeconds = 10
-            }
-          ]
-        }
-        sinksConfig = {
-          sink = [
-            {
-              name = "wadLogs" # Default sink for Azure diagnostics
-            }
-          ]
-        }
-      }
-    }
-  })
-
-  protected_settings = jsonencode({
-    storageAccountName = module.storageaccount.storage_account_name
-    storageAccountKey  = module.storageaccount.storage_account_primary_key
-  })
-}
-
-
   tags = {
     environment = "Test"
   }
