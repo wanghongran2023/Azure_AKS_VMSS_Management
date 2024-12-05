@@ -134,30 +134,29 @@ resource "azurerm_monitor_data_collection_rule" "example" {
   resource_group_name = azurerm_resource_group.resource_group.name
   location            = azurerm_resource_group.resource_group.location
 
-  data_sources {
-    performance_counters {
-      counter_spec {
-        name     = "Processor"
-        counter  = "% Processor Time"
-        instance = "_Total"
-      }
-      counter_spec {
-        name     = "Memory"
-        counter  = "Available MBytes"
-        instance = "_Total"
-      }
+  data_flow {
+    performance_counter {
+      name     = "Processor"
+      counter  = "% Processor Time"
+      instance = "_Total"
+    }
+    performance_counter {
+      name     = "Memory"
+      counter  = "Available MBytes"
+      instance = "_Total"
     }
   }
 
   destinations {
     log_analytics {
-      workspace_id = data.azurerm_log_analytics_workspace.example.id
+      name                = "example-workspace"
+      workspace_resource_id = data.azurerm_log_analytics_workspace.example.id
     }
   }
 }
 
 resource "azurerm_monitor_data_collection_rule_association" "example" {
   name                        = "myAssociation"
-  resource_id                 = azurerm_virtual_machine_scale_set.vmss.id
+  resource_id                 = azurerm_linux_virtual_machine_scale_set.vmss.id
   data_collection_rule_id     = azurerm_monitor_data_collection_rule.example.id
 }
