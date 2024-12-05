@@ -5,7 +5,9 @@ wget https://download.redis.io/releases/redis-6.2.4.tar.gz
 tar xzf redis-6.2.4.tar.gz
 cd redis-6.2.4
 make
-
+sudo apt install redis-tools
+sudo apt install redis-server
+redis-server --daemonize yes
 cd ..      
 pip install -r requirements.txt
 cd azure-vote/      
