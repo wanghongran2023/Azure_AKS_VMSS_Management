@@ -1,9 +1,7 @@
 name: Update File Example
 
 on:
-  push:
-    branches:
-      - main  # Trigger on push to main
+  workflow_dispatch:
 
 jobs:
   update-file:
