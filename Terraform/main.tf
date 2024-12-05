@@ -135,21 +135,26 @@ resource "azurerm_monitor_data_collection_rule" "example" {
   location            = azurerm_resource_group.resource_group.location
 
   data_flow {
-    performance_counter {
-      name     = "Processor"
-      counter  = "% Processor Time"
-      instance = "_Total"
-    }
-    performance_counter {
-      name     = "Memory"
-      counter  = "Available MBytes"
-      instance = "_Total"
+    streams {
+      name = "PerformanceCounters"
+
+      performance_counters {
+        counter  = "% Processor Time"
+        instance = "_Total"
+        name     = "Processor"
+      }
+
+      performance_counters {
+        counter  = "Available MBytes"
+        instance = "_Total"
+        name     = "Memory"
+      }
     }
   }
 
   destinations {
     log_analytics {
-      name                = "example-workspace"
+      name                    = "example-workspace"
       workspace_resource_id = data.azurerm_log_analytics_workspace.example.id
     }
   }
