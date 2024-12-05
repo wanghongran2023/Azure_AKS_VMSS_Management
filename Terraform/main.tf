@@ -80,6 +80,11 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     storage_account_type = "Standard_LRS"
   }
 
+  upgrade_mode    = "Rolling"
+  automatic_os_upgrade_policy {
+    disable_automatic_rollback  = false
+    enable_automatic_os_upgrade = true
+  }
   disable_password_authentication = false
 
   network_interface {
