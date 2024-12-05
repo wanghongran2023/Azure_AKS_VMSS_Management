@@ -3,6 +3,9 @@ name: Update File Example
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   update-file:
     runs-on: ubuntu-latest
