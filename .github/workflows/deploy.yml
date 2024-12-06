@@ -79,6 +79,8 @@ jobs:
       - name: Update Instrumentation Key
         working-directory: azure-vote
         run: |
+          rm -f main.py
+          cp main_template.py main.py
           INSTRUMENTATION_KEY=$(cat ../instrumentation_key.txt)
           ESCAPED_INSTRUMENTATION_KEY=$(echo "$INSTRUMENTATION_KEY" | sed 's/[&/]/\\&/g')
           sed -i "s|{tmp_instrumentation_key}|$ESCAPED_INSTRUMENTATION_KEY|g" main.py
@@ -118,7 +120,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Update Terraform Setup
-        working-directory: Terraform
+        working-directory: Terraform/Part2
         run: |
            sed -i "s|{tmp_subscription_id}|${{ secrets.SUBSCRIPTION_ID }}|g" variables.tfvars
            sed -i "s|{tmp_tenant_id}|${{ secrets.TENANT_ID }}|g" variables.tfvars
@@ -129,7 +131,7 @@ jobs:
            sed -i "s|{tmp_resource_group_location}|${{ vars.RESOURCE_GROUP_LOCATION }}|g" variables.tfvars
 
       - name: Start Terraform Deploy
-        working-directory: Terraform
+        working-directory: Terraform/Part2
         run: |
           terraform init
           terraform validate
