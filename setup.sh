@@ -2,6 +2,7 @@
 
 set -e  
 sudo apt install make -y
+sudo apt install build-essential -y
 
 wget -q https://download.redis.io/releases/redis-6.2.4.tar.gz
 tar xzf redis-6.2.4.tar.gz
