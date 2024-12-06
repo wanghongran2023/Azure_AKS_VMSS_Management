@@ -37,9 +37,7 @@ exporter = metrics_exporter.new_metrics_exporter(
     connection_string="InstrumentationKey=cb35afae-cad6-4b8f-84ca-99191c4f9c7e"
 )
 
-tracer_exporter=AzureExporter(
-        connection_string="InstrumentationKey=cb35afae-cad6-4b8f-84ca-99191c4f9c7e"
-    )
+tracer_exporter=AzureExporter(connection_string="InstrumentationKey=cb35afae-cad6-4b8f-84ca-99191c4f9c7e")
 
 # Tracing
 tracer = Tracer(
