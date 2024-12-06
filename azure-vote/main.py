@@ -26,7 +26,7 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 handler = AzureLogHandler(
-    connection_string='InstrumentationKey=4497e1be-0dac-464b-a27b-aee07fc07130;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=00e98a98-d220-4018-99d4-81baf62c7247'
+    connection_string='InstrumentationKey=4310cf11-90b1-47d5-856b-38d326d9ea09;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=daf562f0-fbb4-4de4-99e7-060fc3ccc46a'
 )
 handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
 logger.addHandler(handler)
@@ -34,15 +34,15 @@ logger.addHandler(handler)
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string='InstrumentationKey=4497e1be-0dac-464b-a27b-aee07fc07130;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=00e98a98-d220-4018-99d4-81baf62c7247'
+    connection_string='InstrumentationKey=4310cf11-90b1-47d5-856b-38d326d9ea09;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=daf562f0-fbb4-4de4-99e7-060fc3ccc46a'
 )
+
+customexporter=AzureExporter(connection_string='InstrumentationKey=4310cf11-90b1-47d5-856b-38d326d9ea09;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=daf562f0-fbb4-4de4-99e7-060fc3ccc46a')
 
 # Tracing
 tracer = Tracer(
-    exporter=AzureExporter(
-        connection_string='InstrumentationKey=4497e1be-0dac-464b-a27b-aee07fc07130;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=00e98a98-d220-4018-99d4-81baf62c7247'
-    ),
-    sampler=ProbabilitySampler(1.0)
+    exporter=customexporter,
+    sampler=ProbabilitySampler(rate=1.0)
 )
 
 app = Flask(__name__)
@@ -50,9 +50,7 @@ app = Flask(__name__)
 # Requests
 middleware = FlaskMiddleware(
     app,
-    exporter=AzureExporter(
-        connection_string='InstrumentationKey=4497e1be-0dac-464b-a27b-aee07fc07130;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=00e98a98-d220-4018-99d4-81baf62c7247'
-    ),
+    exporter=customexporter,
     sampler=ProbabilitySampler(rate=1.0)
 )
 
@@ -97,11 +95,9 @@ def index():
         
         with tracer.span(name="cat_vote") as span:
             span.add_attribute("vote_count", vote1)
-            logger.info(f"Cat votes retrieved: {vote1}")
             
         with tracer.span(name="dog_vote") as span:
             span.add_attribute("vote_count", vote2)
-            logger.info(f"Dog votes retrieved: {vote2}")
 
         # Return index with values
         return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
