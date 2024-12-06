@@ -16,14 +16,13 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "resource_group" {
+data "azurerm_resource_group" "resource_group" {
   name     = var.resource_group_config.name
-  location = var.resource_group_config.location
 }
 
 resource "azurerm_application_insights" "appinsights" {
   name                = "app-insights"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = data.azurerm_resource_group.resource_group.location
+  resource_group_name = data.azurerm_resource_group.resource_group.name
   application_type    = "web"
 }
