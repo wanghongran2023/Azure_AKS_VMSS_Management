@@ -9,7 +9,6 @@ from datetime import datetime
 
 # App Insights
 from opencensus.ext.azure.log_exporter import AzureLogHandler
-from opencensus.ext.azure.log_exporter import AzureEventHandler
 from opencensus.ext.azure import metrics_exporter
 from opencensus.stats import aggregation as aggregation_module
 from opencensus.stats import measure as measure_module
@@ -25,8 +24,8 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 
 # Logging
 logger = logging.getLogger(__name__)
-handler = AzureEventHandler(
-    connection_string='InstrumentationKey=4310cf11-90b1-47d5-856b-38d326d9ea09;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=daf562f0-fbb4-4de4-99e7-060fc3ccc46a'
+handler = AzureLogHandler(
+    connection_string='InstrumentationKey=b133a15b-ac04-4d4f-ac03-793e2e6573df;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=10a90821-568f-4f45-a9bb-98b909de6ad1'
 )
 handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
 logger.addHandler(handler)
@@ -34,10 +33,10 @@ logger.addHandler(handler)
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string='InstrumentationKey=4310cf11-90b1-47d5-856b-38d326d9ea09;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=daf562f0-fbb4-4de4-99e7-060fc3ccc46a'
+    connection_string='InstrumentationKey=b133a15b-ac04-4d4f-ac03-793e2e6573df;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=10a90821-568f-4f45-a9bb-98b909de6ad1'
 )
 
-customexporter=AzureExporter(connection_string='InstrumentationKey=4310cf11-90b1-47d5-856b-38d326d9ea09;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=daf562f0-fbb4-4de4-99e7-060fc3ccc46a')
+customexporter=AzureExporter(connection_string='InstrumentationKey=b133a15b-ac04-4d4f-ac03-793e2e6573df;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=10a90821-568f-4f45-a9bb-98b909de6ad1')
 
 # Tracing
 tracer = Tracer(
@@ -94,10 +93,10 @@ def index():
         vote2 = r.get(button2).decode('utf-8')
         
         with tracer.span(name="cat_vote") as span:
-            span.add_attribute("count", vote1)
+            span.add_attribute("vote_count", vote1)
             
         with tracer.span(name="dog_vote") as span:
-            span.add_attribute("count", vote2)
+            span.add_attribute("vote_count", vote2)
 
         # Return index with values
         return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
