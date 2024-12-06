@@ -18,7 +18,6 @@ provider "azurerm" {
 
 data "azurerm_resource_group" "resource_group" {
   name     = var.resource_group_config.name
-  location = var.resource_group_config.location
 }
 
 module "network" {
