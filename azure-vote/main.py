@@ -37,12 +37,14 @@ exporter = metrics_exporter.new_metrics_exporter(
     connection_string="InstrumentationKey=cb35afae-cad6-4b8f-84ca-99191c4f9c7e"
 )
 
+tracer_exporter=AzureExporter(
+        connection_string="InstrumentationKey=cb35afae-cad6-4b8f-84ca-99191c4f9c7e"
+    )
+
 # Tracing
 tracer = Tracer(
-    exporter=AzureExporter(
-        connection_string="InstrumentationKey=cb35afae-cad6-4b8f-84ca-99191c4f9c7e"
-    ),
-    sampler=ProbabilitySampler(1.0)
+    exporter=tracer_exporter,
+    sampler=ProbabilitySampler(rate=1.0)
 )
 
 app = Flask(__name__)
@@ -50,9 +52,7 @@ app = Flask(__name__)
 # Requests
 middleware = FlaskMiddleware(
     app,
-    exporter=AzureExporter(
-        connection_string="InstrumentationKey=cb35afae-cad6-4b8f-84ca-99191c4f9c7e"
-    ),
+    exporter=tracer_exporter,
     sampler=ProbabilitySampler(rate=1.0)
 )
 
