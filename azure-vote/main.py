@@ -26,7 +26,7 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 handler = AzureLogHandler(
-    connection_string="InstrumentationKey=cb35afae-cad6-4b8f-84ca-99191c4f9c7e"
+    connection_string='InstrumentationKey=4497e1be-0dac-464b-a27b-aee07fc07130;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=00e98a98-d220-4018-99d4-81baf62c7247'
 )
 handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
 logger.addHandler(handler)
@@ -34,15 +34,15 @@ logger.addHandler(handler)
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string="InstrumentationKey=cb35afae-cad6-4b8f-84ca-99191c4f9c7e"
+    connection_string='InstrumentationKey=4497e1be-0dac-464b-a27b-aee07fc07130;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=00e98a98-d220-4018-99d4-81baf62c7247'
 )
-
-tracer_exporter=AzureExporter(connection_string="InstrumentationKey=cb35afae-cad6-4b8f-84ca-99191c4f9c7e")
 
 # Tracing
 tracer = Tracer(
-    exporter=tracer_exporter,
-    sampler=ProbabilitySampler(rate=1.0)
+    exporter=AzureExporter(
+        connection_string='InstrumentationKey=4497e1be-0dac-464b-a27b-aee07fc07130;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=00e98a98-d220-4018-99d4-81baf62c7247'
+    ),
+    sampler=ProbabilitySampler(1.0)
 )
 
 app = Flask(__name__)
@@ -50,7 +50,9 @@ app = Flask(__name__)
 # Requests
 middleware = FlaskMiddleware(
     app,
-    exporter=tracer_exporter,
+    exporter=AzureExporter(
+        connection_string='InstrumentationKey=4497e1be-0dac-464b-a27b-aee07fc07130;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=00e98a98-d220-4018-99d4-81baf62c7247'
+    ),
     sampler=ProbabilitySampler(rate=1.0)
 )
 
@@ -92,19 +94,15 @@ def index():
         # Get current values
         vote1 = r.get(button1).decode('utf-8')
         vote2 = r.get(button2).decode('utf-8')
-
-        print("start creat span")
+        
         with tracer.span(name="cat_vote") as span:
             span.add_attribute("vote_count", vote1)
-            print("creat span")
-            print(vote1)
+            logger.info(f"Cat votes retrieved: {vote1}")
             
         with tracer.span(name="dog_vote") as span:
             span.add_attribute("vote_count", vote2)
-            print("creat span")
-            print(vote2)
+            logger.info(f"Dog votes retrieved: {vote2}")
 
-        print("stop creat span")
         # Return index with values
         return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
