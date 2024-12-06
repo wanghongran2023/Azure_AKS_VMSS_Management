@@ -50,40 +50,40 @@ jobs:
           terraform fmt
           terraform plan -var-file=variables.tfvars
           terraform apply -auto-approve -var-file=variables.tfvars
-          instrumentation_key=$(terraform output -raw instrumentation_key)
-          if [ -z "$instrumentation_key" ]; then
-            echo "Error: instrumentation_key is empty!"
+          connection_string=$(terraform output -raw connection_string)
+          if [ -z "$connection_string" ]; then
+            echo "Error: connection_string is empty!"
             exit 1
           fi
-          echo "$instrumentation_key" > ../../instrumentation_key.txt
+          echo "$connection_string" > ../../connection_string.txt
 
-      - name: Upload Instrumentation Key as artifact
+      - name: Upload Connection String as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: instrumentation_key
-          path: instrumentation_key.txt
+          name: connection_string
+          path: connection_string.txt
 
   EditAppDeployFile:
-    name: Update App Deploy File with Instrumentation Key
+    name: Update App Deploy File with Connection String
     needs: DeployAPPInsights
     runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
 
-      - name: Download Instrumentation Key
+      - name: Download Connection String
         uses: actions/download-artifact@v4
         with:
-          name: instrumentation_key
+          name: connection_string
 
-      - name: Update Instrumentation Key
+      - name: Update Connection String
         working-directory: azure-vote
         run: |
           rm -f main.py
           cp main_template.py main.py
-          INSTRUMENTATION_KEY=$(cat ../instrumentation_key.txt)
-          ESCAPED_INSTRUMENTATION_KEY=$(echo "$INSTRUMENTATION_KEY" | sed 's/[&/]/\\&/g')
-          sed -i "s|{tmp_instrumentation_key}|$ESCAPED_INSTRUMENTATION_KEY|g" main.py
+          CONNECTION_STRING=$(cat ../connection_string.txt)
+          ESCAPED_CONNECTION_STRING=$(echo "$CONNECTION_STRING" | sed 's/[&/]/\\&/g')
+          sed -i "s|{tmp_connection_string}|$ESCAPED_CONNECTION_STRING|g" main.py
 
       - name: Commit changes
         working-directory: azure-vote
