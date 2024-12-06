@@ -37,12 +37,12 @@ exporter = metrics_exporter.new_metrics_exporter(
     connection_string='{tmp_connection_string}'
 )
 
+customexporter=AzureExporter(connection_string='{tmp_connection_string}')
+
 # Tracing
 tracer = Tracer(
-    exporter=AzureExporter(
-        connection_string='{tmp_connection_string}'
-    ),
-    sampler=ProbabilitySampler(1.0)
+    exporter=customexporter,
+    sampler=ProbabilitySampler(rate=1.0)
 )
 
 app = Flask(__name__)
@@ -50,9 +50,7 @@ app = Flask(__name__)
 # Requests
 middleware = FlaskMiddleware(
     app,
-    exporter=AzureExporter(
-        connection_string='{tmp_connection_string}'
-    ),
+    exporter=customexporter,
     sampler=ProbabilitySampler(rate=1.0)
 )
 
@@ -97,11 +95,9 @@ def index():
         
         with tracer.span(name="cat_vote") as span:
             span.add_attribute("vote_count", vote1)
-            logger.info(f"Cat votes retrieved: {vote1}")
             
         with tracer.span(name="dog_vote") as span:
             span.add_attribute("vote_count", vote2)
-            logger.info(f"Dog votes retrieved: {vote2}")
 
         # Return index with values
         return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
