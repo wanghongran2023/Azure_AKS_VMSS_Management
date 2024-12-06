@@ -12,4 +12,4 @@ sudo apt install -y redis-tools redis-server
 sudo redis-server --daemonize yes
 pip install -r requirements.txt
 cd azure-vote/
-sudo python main.py
+sudo nohup python main.py > app.log 2>&1 &
