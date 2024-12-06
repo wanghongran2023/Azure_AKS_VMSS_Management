@@ -11,4 +11,4 @@ redis-server --daemonize yes
 cd ..      
 pip install -r requirements.txt
 cd azure-vote/      
-python main.py
+sudo python main.py
