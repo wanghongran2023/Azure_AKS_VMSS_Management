@@ -26,7 +26,7 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 handler = AzureLogHandler(
-    connection_string='InstrumentationKey=209b0c0b-203d-4bbb-96b7-b12dfbc691f6;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=41759b4c-cea7-4aca-90e7-85053a9129ee'
+    connection_string='InstrumentationKey=5da75c93-e6ec-4695-9377-273da2599af1;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=637777ef-bafa-463b-b4ed-1261d7eab780'
 )
 handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
 logger.addHandler(handler)
@@ -34,13 +34,13 @@ logger.addHandler(handler)
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string='InstrumentationKey=209b0c0b-203d-4bbb-96b7-b12dfbc691f6;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=41759b4c-cea7-4aca-90e7-85053a9129ee'
+    connection_string='InstrumentationKey=5da75c93-e6ec-4695-9377-273da2599af1;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=637777ef-bafa-463b-b4ed-1261d7eab780'
 )
 
 # Tracing
 tracer = Tracer(
     exporter=AzureExporter(
-        connection_string='InstrumentationKey=209b0c0b-203d-4bbb-96b7-b12dfbc691f6;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=41759b4c-cea7-4aca-90e7-85053a9129ee'
+        connection_string='InstrumentationKey=5da75c93-e6ec-4695-9377-273da2599af1;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=637777ef-bafa-463b-b4ed-1261d7eab780'
     ),
     sampler=ProbabilitySampler(1.0)
 )
@@ -51,7 +51,7 @@ app = Flask(__name__)
 middleware = FlaskMiddleware(
     app,
     exporter=AzureExporter(
-        connection_string='InstrumentationKey=209b0c0b-203d-4bbb-96b7-b12dfbc691f6;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=41759b4c-cea7-4aca-90e7-85053a9129ee'
+        connection_string='InstrumentationKey=5da75c93-e6ec-4695-9377-273da2599af1;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=637777ef-bafa-463b-b4ed-1261d7eab780'
     ),
     sampler=ProbabilitySampler(rate=1.0)
 )
