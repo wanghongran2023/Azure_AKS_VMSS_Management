@@ -81,10 +81,11 @@ jobs:
           sed -i "s|{tmp_instrumentation_key}|$ESCAPED_INSTRUMENTATION_KEY|g" main.py
 
       - name: Commit changes
+        working-directory: azure-vote
         run: |
           git config --global user.name "Github Action"
           git config --global user.email "githubaction@example.com"
-          git add .
+          git add main.py
           git commit -m "Update main.py with new key"
           git push origin main
         env:
