@@ -1,4 +1,4 @@
-name: Infra Construction
+name: Infra Construction and App Deploy
 
 on:
   workflow_dispatch:
@@ -7,8 +7,93 @@ permissions:
   id-token: write
 
 jobs:  
+  DeployAPPInsights:
+    name: Deploy AppInsghts By Terraform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache Terraform binary
+        uses: actions/cache@v3
+        with:
+          path: /usr/bin/terraform
+          key: terraform-cache-${{ runner.os }}-${{ hashFiles('**/terraform') }}
+          restore-keys: |
+            terraform-cache-${{ runner.os }}-
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7
+          terraform_wrapper: false
+
+      - name: Update Terraform Setup
+        working-directory: Terraform/Part1
+        run: |
+           sed -i "s|{tmp_subscription_id}|${{ secrets.SUBSCRIPTION_ID }}|g" variables.tfvars
+           sed -i "s|{tmp_tenant_id}|${{ secrets.TENANT_ID }}|g" variables.tfvars
+           sed -i "s|{tmp_sp_client_id}|${{ secrets.SP_CLIENT_ID }}|g" variables.tfvars
+           sed -i "s|{tmp_sp_client_secret}|${{ secrets.SP_CLIENT_SECRET }}|g" variables.tfvars
+
+           sed -i "s|{tmp_resource_group_name}|${{ vars.RESOURCE_GROUP_NAME }}|g" variables.tfvars
+           sed -i "s|{tmp_resource_group_location}|${{ vars.RESOURCE_GROUP_LOCATION }}|g" variables.tfvars
+
+      - name: Start Terraform Deploy
+        working-directory: Terraform/Part1
+        run: |
+          terraform init
+          terraform validate
+          terraform fmt
+          terraform plan -var-file=variables.tfvars
+          terraform apply -auto-approve -var-file=variables.tfvars
+          instrumentation_key=$(terraform output -raw instrumentation_key)
+          if [ -z "$instrumentation_key" ]; then
+            echo "Error: instrumentation_key is empty!"
+            exit 1
+          fi
+          echo "$instrumentation_key" > ../../instrumentation_key.txt
+
+      - name: Upload Instrumentation Key as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: instrumentation_key
+          path: instrumentation_key.txt
+
+  EditAppDeployFile:
+    name: Update App Deploy File with Instrumentation Key
+    needs: DeployAPPInsights
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Instrumentation Key
+        uses: actions/download-artifact@v4
+        with:
+          name: instrumentation_key
+
+      - name: Update Instrumentation Key
+        working-directory: azure-vote
+        run: |
+          INSTRUMENTATION_KEY=$(cat ../instrumentation_key.txt)
+          ESCAPED_INSTRUMENTATION_KEY=$(echo "$INSTRUMENTATION_KEY" | sed 's/[&/]/\\&/g')
+          sed -i "s|{tmp_instrumentation_key}|$ESCAPED_INSTRUMENTATION_KEY|g" main.py
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "Github Action"
+          git config --global user.email "githubaction@example.com"
+          git add .
+          git commit -m "Update main.py with new key"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
   DeployInfraAndBuild:
     name: Deploy Infra and Build
+    needs: EditAppDeployFile
     runs-on: ubuntu-latest
     steps:
       - name: Code Checkout

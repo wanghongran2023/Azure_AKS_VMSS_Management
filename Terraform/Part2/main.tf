@@ -16,37 +16,37 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "resource_group" {
+data "azurerm_resource_group" "resource_group" {
   name     = var.resource_group_config.name
   location = var.resource_group_config.location
 }
 
 module "network" {
   source = "./network"
-  resource_group_name=azurerm_resource_group.resource_group.name
-  resource_group_location=azurerm_resource_group.resource_group.location
+  resource_group_name=data.azurerm_resource_group.resource_group.name
+  resource_group_location=data.azurerm_resource_group.resource_group.location
   resource_header="wangudacity-vmss"
 }
 
 module "loadbalancer" {
   source = "./loadbalancer"
-  resource_group_name=azurerm_resource_group.resource_group.name
-  resource_group_location=azurerm_resource_group.resource_group.location
+  resource_group_name=data.azurerm_resource_group.resource_group.name
+  resource_group_location=data.azurerm_resource_group.resource_group.location
   resource_header="wangudacity-vmss"
 }
 
 module "storageaccount" {
   source = "./storageaccount"
-  resource_group_name=azurerm_resource_group.resource_group.name
-  resource_group_location=azurerm_resource_group.resource_group.location
+  resource_group_name=data.azurerm_resource_group.resource_group.name
+  resource_group_location=data.azurerm_resource_group.resource_group.location
   resource_header="wangudacity"
 }
 
 
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "udacity-vmss"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = data.azurerm_resource_group.resource_group.location
+  resource_group_name = data.azurerm_resource_group.resource_group.name
 
   admin_username       = "myadmin"
   admin_password       = "MyP@ssw0rd123!"
@@ -85,12 +85,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     publisher            = "Microsoft.Azure.Extensions"
     type                 = "CustomScript"
     type_handler_version = "2.0"
-
     settings = jsonencode({
       commandToExecute = "git clone https://github.com/wanghongran2023/Azure_AKS_VMSS_Management.git && cd Azure_AKS_VMSS_Management && sh setup.sh"
     })
   }
-
 
   tags = {
     environment = "Test"
