@@ -24,19 +24,19 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 
 # Logging
 logger = logging.getLogger(__name__)
-handler = AzureLogHandler(connection_string='InstrumentationKey=9f753fd9-d22c-4043-9f03-d174286e9ea8')
+handler = AzureLogHandler(connection_string='InstrumentationKey=ccac7783-1fa9-474c-9e22-b6c820bc682c')
 handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
 logger.addHandler(handler)
 
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string='InstrumentationKey=9f753fd9-d22c-4043-9f03-d174286e9ea8'
+    connection_string='InstrumentationKey=ccac7783-1fa9-474c-9e22-b6c820bc682c'
 )
 
 # Tracing
 tracer = Tracer(
-    exporter=AzureExporter(connection_string='InstrumentationKey=9f753fd9-d22c-4043-9f03-d174286e9ea8'),
+    exporter=AzureExporter(connection_string='InstrumentationKey=ccac7783-1fa9-474c-9e22-b6c820bc682c'),
     sampler=ProbabilitySampler(1.0)
 )
 
@@ -45,7 +45,7 @@ app = Flask(__name__)
 # Requests
 middleware = FlaskMiddleware(
     app,
-    exporter=AzureExporter(connection_string='InstrumentationKey=9f753fd9-d22c-4043-9f03-d174286e9ea8'),
+    exporter=AzureExporter(connection_string='InstrumentationKey=ccac7783-1fa9-474c-9e22-b6c820bc682c'),
     sampler=ProbabilitySampler(rate=1.0)
 )
 
