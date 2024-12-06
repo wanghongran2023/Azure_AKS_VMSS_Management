@@ -7,7 +7,7 @@ sudo apt install python3-pip -y
 sudo -H pip3 install --upgrade pip
 sudo apt-get install python3-venv -y
 python3 -m venv venv
-source venv/bin/activate
+. venv/bin/activate
 
 wget -q https://download.redis.io/releases/redis-6.2.4.tar.gz
 tar xzf redis-6.2.4.tar.gz
