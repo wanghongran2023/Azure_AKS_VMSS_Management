@@ -24,19 +24,19 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 
 # Logging
 logger = logging.getLogger(__name__)
-handler = AzureLogHandler(connection_string='InstrumentationKey=3c934aa5-f27b-4614-9a52-600da3a00f87')
+handler = AzureLogHandler(connection_string='InstrumentationKey=InstrumentationKey=fee8e911-2d25-4eee-bf41-20eaca9c6166;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=f0b6b909-de94-4643-9dc3-fe8490096d73')
 handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
 logger.addHandler(handler)
 
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string='InstrumentationKey=3c934aa5-f27b-4614-9a52-600da3a00f87'
+    connection_string='InstrumentationKey=InstrumentationKey=fee8e911-2d25-4eee-bf41-20eaca9c6166;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=f0b6b909-de94-4643-9dc3-fe8490096d73'
 )
 
 # Tracing
 tracer = Tracer(
-    exporter=AzureExporter(connection_string='InstrumentationKey=3c934aa5-f27b-4614-9a52-600da3a00f87'),
+    exporter=AzureExporter(connection_string='InstrumentationKey=InstrumentationKey=fee8e911-2d25-4eee-bf41-20eaca9c6166;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=f0b6b909-de94-4643-9dc3-fe8490096d73'),
     sampler=ProbabilitySampler(1.0)
 )
 
@@ -45,7 +45,7 @@ app = Flask(__name__)
 # Requests
 middleware = FlaskMiddleware(
     app,
-    exporter=AzureExporter(connection_string='InstrumentationKey=3c934aa5-f27b-4614-9a52-600da3a00f87'),
+    exporter=AzureExporter(connection_string='InstrumentationKey=InstrumentationKey=fee8e911-2d25-4eee-bf41-20eaca9c6166;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=f0b6b909-de94-4643-9dc3-fe8490096d73'),
     sampler=ProbabilitySampler(rate=1.0)
 )
 
