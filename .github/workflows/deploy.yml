@@ -255,12 +255,12 @@ jobs:
           
       - name: Set up AKS credentials
         run: |
-          az aks get-credentials --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name ${{ secrets.AKS_NAME }} --overwrite-existing
+          az aks get-credentials --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name wangudacityaks --overwrite-existing
 
       - name: Deploy to Kubernetes
-        working-directory: Kubernetes
+        working-directory: Kubernete
         run: |
-          sed -i "s|{tmp_acr_name}|${{ secrets.ACR_NAME }}|g" deployment.yaml
+          sed -i "s|{tmp_acr_name}|wangudacityacr|g" deployment.yaml
           kubectl apply -f ./deployment.yaml
           kubectl apply -f ./service.yaml
 
