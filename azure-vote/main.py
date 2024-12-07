@@ -22,7 +22,7 @@ from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # TODO: Import required libraries for App Insights
 
-connection_string = "InstrumentationKey=f57659a0-fe8d-4ec6-9a5e-9d3e872637ec;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=f3d73da6-9055-4a90-88ef-3cbff772d590"
+connection_string = "InstrumentationKey=4ee2bfaf-22ec-4f60-a21d-fe734db97fb2;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=1f8e2fdf-315d-4e96-a755-32471f256a44"
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 log_handler = AzureLogHandler(connection_string=connection_string)
@@ -139,4 +139,4 @@ if __name__ == "__main__":
     # TODO: Use the statement below when running locally
     #app.run() 
     # TODO: Use the statement below before deployment to VMSS
-    app.run(host='0.0.0.0', threaded=True, debug=True) # remote
+    app.run(host='0.0.0.0', port=5000, threaded=True, debug=True) # remote
