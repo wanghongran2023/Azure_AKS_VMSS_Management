@@ -203,11 +203,8 @@ jobs:
           ACR_NAME=$(cat acr_name.txt)
           az acr login --name $ACR_NAME
           docker-compose up -d --build
+          docker tag azure-vote-front:v1 $ACR_REGISTRY/azure-vote-front:v1
+          docker push $ACR_REGISTRY/azure-vote-front:v1
 
-      - name: Push Image
-        run: |
-          docker tag azure-vote-front:v1 wangudacityacr.azurecr.io/azure-vote-front:v1
-          docker push wangudacityacr.azurecr.io/azure-vote-front:v1
-
-          docker tag mcr.microsoft.com/oss/bitnami/redis:6.0.8 wangudacityacr.azurecr.io/bitnami-redis:6.0.8
-          docker push wangudacityacr.azurecr.io/bitnami-redis:6.0.8
+          docker tag mcr.microsoft.com/oss/bitnami/redis:6.0.8 $ACR_REGISTRY/bitnami-redis:6.0.8
+          docker push $ACR_REGISTRY/bitnami-redis:6.0.8
