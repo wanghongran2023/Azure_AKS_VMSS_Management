@@ -163,7 +163,7 @@ jobs:
             ./Terraform/Part2/acr_login_server.txt
             ./Terraform/Part2/acr_name.txt
         
-  DeployImageForAKS:
+  BuildImageForAKS:
     name: Build Image for AKS
     needs: DeployInfraAndBuild
     runs-on: ubuntu-latest
@@ -176,12 +176,26 @@ jobs:
         with:
           name: acr_login_server
 
+      - name: Download Connection String
+        uses: actions/download-artifact@v4
+        with:
+          name: connection_string
+          
       - name: Log in to Azure
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.SP_CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+
+      - name: Update Connection String
+        working-directory: azure-vote
+        run: |
+          rm -f main.py
+          cp main_template_aks.py main.py
+          CONNECTION_STRING=$(cat ../connection_string.txt)
+          ESCAPED_CONNECTION_STRING=$(echo "$CONNECTION_STRING" | sed 's/[&/]/\\&/g')
+          sed -i "s|{tmp_connection_string}|$ESCAPED_CONNECTION_STRING|g" main.py
 
       - name: Azure CLI script
         uses: azure/cli@v2
@@ -208,3 +222,10 @@ jobs:
 
           docker tag mcr.microsoft.com/oss/bitnami/redis:6.0.8 $ACR_REGISTRY/bitnami-redis:6.0.8
           docker push $ACR_REGISTRY/bitnami-redis:6.0.8
+
+  DeployAKS:
+    name: Deploy Image for AKS
+    needs: BuildImageForAKS
+    runs-on: ubuntu-latest
+    steps:
+      
