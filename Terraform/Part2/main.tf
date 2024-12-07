@@ -27,7 +27,7 @@ module "network" {
   resource_header="wangudacity-vmss"
 }
 
-module "baston" {
+module "bastion" {
   source = "./baston"
   resource_group_name=data.azurerm_resource_group.resource_group.name
   resource_group_location=data.azurerm_resource_group.resource_group.location
