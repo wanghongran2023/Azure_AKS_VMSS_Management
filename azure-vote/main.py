@@ -9,6 +9,7 @@ from datetime import datetime
 
 # App Insights
 from opencensus.ext.azure.log_exporter import AzureLogHandler
+from opencensus.ext.azure.log_exporter import AzureEventHandler
 from opencensus.ext.azure import metrics_exporter
 from opencensus.stats import aggregation as aggregation_module
 from opencensus.stats import measure as measure_module
@@ -24,8 +25,8 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 
 # Logging
 logger = logging.getLogger(__name__)
-handler = AzureLogHandler(
-    connection_string='InstrumentationKey=cd39e526-756c-4c6d-a387-93eb659ec964;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=482c887b-44cb-4854-bff8-46eee376ec87'
+handler = AzureEventHandler(
+    connection_string='InstrumentationKey=32c92d4c-8f3a-4ec2-9028-24c11ee2b273;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=61503f02-cad7-4234-97ab-732d9fb716e4'
 )
 handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
 logger.addHandler(handler)
@@ -33,10 +34,10 @@ logger.addHandler(handler)
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string='InstrumentationKey=cd39e526-756c-4c6d-a387-93eb659ec964;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=482c887b-44cb-4854-bff8-46eee376ec87'
+    connection_string='InstrumentationKey=32c92d4c-8f3a-4ec2-9028-24c11ee2b273;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=61503f02-cad7-4234-97ab-732d9fb716e4'
 )
 
-customexporter=AzureExporter(connection_string='InstrumentationKey=cd39e526-756c-4c6d-a387-93eb659ec964;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=482c887b-44cb-4854-bff8-46eee376ec87')
+customexporter=AzureExporter(connection_string='InstrumentationKey=32c92d4c-8f3a-4ec2-9028-24c11ee2b273;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=61503f02-cad7-4234-97ab-732d9fb716e4')
 
 # Tracing
 tracer = Tracer(
