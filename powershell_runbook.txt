@@ -1,0 +1,10 @@
+Connect-AzAccount -Identity
+
+$resourceGroup = "cloud-demo"
+$vmssName = "udacity-vmss"
+$desiredInstanceCount = 4
+
+$vmss = Get-AzVmss -ResourceGroupName $resourceGroup -VMScaleSetName $vmssName
+$vmss.Sku.Capacity = $desiredInstanceCount
+Update-AzVmss -ResourceGroupName $resourceGroup -VMScaleSetName $vmssName -VirtualMachineScaleSet $vmss
+Write-Output "Scaled '$vmssName' to $desiredInstanceCount instances."
