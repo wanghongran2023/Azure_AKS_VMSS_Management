@@ -83,6 +83,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
       primary                                = true
       subnet_id                              = module.network.subnet_id
       load_balancer_backend_address_pool_ids = [module.loadbalancer.backend_pool_id]
+      public_ip_address_id = azurerm_public_ip.vmss_public_ip.id
     }
   }
 
@@ -100,5 +101,15 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   tags = {
     environment = "Test"
   }
+}
+
+resource "azurerm_public_ip" "vmss_public_ip" {
+  count               = 4
+  name                = "vmss-public-ip-${count.index}"
+  location            = data.azurerm_resource_group.resource_group.location
+  resource_group_name = data.azurerm_resource_group.resource_group.name
+  allocation_method   = "Dynamic"
+  sku                 = "Basic"
+  domain_name_label   = "vmss-${count.index}"
 }
 
