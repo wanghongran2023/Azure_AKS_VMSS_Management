@@ -260,7 +260,7 @@ jobs:
       - name: Deploy to Kubernetes
         working-directory: Kubenete
         run: |
-          sed -i "s|{tmp_acr_name}|wangudacityacr|g" deployment.yaml
+          sed -i "s|{tmp_acr_name}|wangudacityacr|g" Deploy.yaml
           kubectl apply -f ./Deploy.yaml
 
       
