@@ -26,9 +26,6 @@ logger.setLevel(logging.INFO)
 connection_string = "{tmp_connection_string}"
 log_handler = AzureLogHandler(connection_string=connection_string)
 event_handler = AzureEventHandler(connection_string=connection_string)
-formatter = logging.Formatter('%(traceId)s %(spanId)s %(message)s')
-log_handler.setFormatter(formatter)
-event_handler.setFormatter(formatter)
 logger.addHandler(log_handler)
 logger.addHandler(event_handler)
 
