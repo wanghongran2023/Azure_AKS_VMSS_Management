@@ -79,6 +79,7 @@ if not r.get(button2): r.set(button2,0)
 @app.route('/health', methods=['GET'])
 def health():
     try:
+        r.ping()
         return "OK", 200
     except redis.ConnectionError:
         return "Redis connection failed", 500
