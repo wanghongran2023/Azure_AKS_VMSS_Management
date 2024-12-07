@@ -27,6 +27,13 @@ module "network" {
   resource_header="wangudacity-vmss"
 }
 
+module "baston" {
+  source = "./baston"
+  resource_group_name=data.azurerm_resource_group.resource_group.name
+  resource_group_location=data.azurerm_resource_group.resource_group.location
+  resource_header="wangudacity-vmss"
+}
+
 module "loadbalancer" {
   source = "./loadbalancer"
   resource_group_name=data.azurerm_resource_group.resource_group.name
