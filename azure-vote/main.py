@@ -22,7 +22,7 @@ from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # TODO: Import required libraries for App Insights
 
-connection_string = "InstrumentationKey=4a6c4d57-ae29-433e-83e7-a86fa2b8b02b;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=8ad240f7-50a8-467f-b852-5a3de9a698b5"
+connection_string = "InstrumentationKey=c55ee3de-2231-4add-9c63-56baf51eeb73;IngestionEndpoint=https://southcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/;ApplicationId=69d3c1c9-f48a-4890-b869-6687918b0ad4"
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 log_handler = AzureLogHandler(connection_string=connection_string)
