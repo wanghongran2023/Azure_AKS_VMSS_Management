@@ -20,41 +20,32 @@ from opencensus.ext.azure.trace_exporter import AzureExporter
 from opencensus.trace.samplers import ProbabilitySampler
 from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
-# TODO: Import required libraries for App Insights
 
-
-# Logging
 logger = logging.getLogger(__name__)
-handler = AzureEventHandler(
-    connection_string='{tmp_connection_string}'
-)
-handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
-logger.addHandler(handler)
 logger.setLevel(logging.INFO)
-
-# Metrics
-exporter = metrics_exporter.new_metrics_exporter(
-    enable_standard_metrics=True,
-    connection_string='{tmp_connection_string}'
-)
-
-customexporter=AzureExporter(connection_string='{tmp_connection_string}')
-
-# Tracing
-tracer = Tracer(
-    exporter=customexporter,
-    sampler=ProbabilitySampler(rate=1.0)
-)
+connection_string = "{tmp_connection_string}"
+log_handler = AzureLogHandler(connection_string=connection_string)
+event_handler = AzureEventHandler(connection_string=connection_string)
+formatter = logging.Formatter('%(traceId)s %(spanId)s %(message)s')
+log_handler.setFormatter(formatter)
+event_handler.setFormatter(formatter)
+logger.addHandler(log_handler)
+logger.addHandler(event_handler)
 
 app = Flask(__name__)
-
-# Requests
-middleware = FlaskMiddleware(
-    app,
-    exporter=customexporter,
+metrics_exporter = metrics_exporter.new_metrics_exporter(
+    enable_standard_metrics=True,
+    connection_string=connection_string
+)
+tracer = Tracer(
+    exporter=AzureExporter(connection_string=connection_string),
     sampler=ProbabilitySampler(rate=1.0)
 )
-
+middleware = FlaskMiddleware(
+    app,
+    exporter=AzureExporter(connection_string=connection_string),
+    sampler=ProbabilitySampler(rate=1.0)
+)
 
 # Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
