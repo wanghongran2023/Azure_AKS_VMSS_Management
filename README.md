@@ -26,5 +26,4 @@ In this project, we will use github action flow and Terraform to build the infra
 
 ## Deploy Infra and APp
 
-  - Run the Infrastructure Construction Workflow. This workflow will use GitHub secrets and variables to update Terraform variables and deploy the storage account, database, resource group, and app services ... to Azure
-  - However, you still need to check the binding of servicebus and function trigger
+  - Run the github Workflow. This workflow will use GitHub secrets and variables to update Terraform variables and deploy the Vmss, bastion, resource group, aks ... to Azure
