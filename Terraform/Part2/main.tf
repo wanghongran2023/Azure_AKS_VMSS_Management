@@ -41,6 +41,13 @@ module "storageaccount" {
   resource_header="wangudacity"
 }
 
+module "aks" {
+  source = "./aks"
+  resource_group_name=data.azurerm_resource_group.resource_group.name
+  resource_group_location=data.azurerm_resource_group.resource_group.location
+  resource_header="wangudacity"
+}
+
 
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "udacity-vmss"
