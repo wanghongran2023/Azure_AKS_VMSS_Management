@@ -1,6 +1,6 @@
 resource "azurerm_public_ip" "bastonip" {
   name                = "baston-public-ip"
-  location            = var.resource_group_group
+  location            = var.resource_group_location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
 }
@@ -8,7 +8,7 @@ resource "azurerm_public_ip" "bastonip" {
 
 resource "azurerm_network_interface" "bastonnic" {
   name                = "baston-nic"
-  location            = var.resource_group_group
+  location            = var.resource_group_location
   resource_group_name = var.resource_group_name
 
   ip_configuration {
@@ -20,10 +20,10 @@ resource "azurerm_network_interface" "bastonnic" {
 }
 
 resource "azurerm_linux_virtual_machine" "example" {
-  name                  = "example-vm"
+  name                  = "baston-vm"
   location              = var.resource_group_location
-  resource_group_name   = azurerm_resource_group.example.name
-  network_interface_ids = [azurerm_network_interface.example.id]
+  resource_group_name   = var.resource_group_name
+  network_interface_ids = [azurerm_network_interface.bastonnic.id]
   size                  = "Standard_DS1_v2"
 
   admin_username = "exampleadmin"
