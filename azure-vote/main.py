@@ -26,7 +26,7 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # Logging
 logger = logging.getLogger(__name__)
 handler = AzureEventHandler(
-    connection_string='InstrumentationKey=2489001b-7ded-4c69-8809-0f659b1d1286;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=a5d513b3-0fea-411e-a30a-f9b895b376f1'
+    connection_string='InstrumentationKey=7413e0d8-5b20-4120-96c5-7f7e647a602d;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=df13d247-fc76-466c-82eb-684713ac5f75'
 )
 handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
 logger.addHandler(handler)
@@ -34,10 +34,10 @@ logger.addHandler(handler)
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string='InstrumentationKey=2489001b-7ded-4c69-8809-0f659b1d1286;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=a5d513b3-0fea-411e-a30a-f9b895b376f1'
+    connection_string='InstrumentationKey=7413e0d8-5b20-4120-96c5-7f7e647a602d;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=df13d247-fc76-466c-82eb-684713ac5f75'
 )
 
-customexporter=AzureExporter(connection_string='InstrumentationKey=2489001b-7ded-4c69-8809-0f659b1d1286;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=a5d513b3-0fea-411e-a30a-f9b895b376f1')
+customexporter=AzureExporter(connection_string='InstrumentationKey=7413e0d8-5b20-4120-96c5-7f7e647a602d;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=df13d247-fc76-466c-82eb-684713ac5f75')
 
 # Tracing
 tracer = Tracer(
