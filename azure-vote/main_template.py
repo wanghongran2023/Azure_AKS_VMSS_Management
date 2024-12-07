@@ -23,40 +23,37 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # TODO: Import required libraries for App Insights
 
 
-# Logging
 logger = logging.getLogger(__name__)
-handler = AzureEventHandler(
-    connection_string='{tmp_connection_string}'
-)
-handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
-logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
-# Metrics
-exporter = metrics_exporter.new_metrics_exporter(
+connection_string = "{tmp_connection_string}"
+
+log_handler = AzureLogHandler(connection_string=connection_string)
+event_handler = AzureEventHandler(connection_string=connection_string)
+formatter = logging.Formatter('%(traceId)s %(spanId)s %(message)s')
+log_handler.setFormatter(formatter)
+event_handler.setFormatter(formatter)
+logger.addHandler(log_handler)
+logger.addHandler(event_handler)
+
+metrics_exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string='{tmp_connection_string}'
+    connection_string=connection_string
 )
 
-customexporter=AzureExporter(connection_string='{tmp_connection_string}')
-
-# Tracing
 tracer = Tracer(
-    exporter=customexporter,
+    exporter=AzureExporter(connection_string=connection_string),
     sampler=ProbabilitySampler(rate=1.0)
 )
 
 app = Flask(__name__)
 
-# Requests
 middleware = FlaskMiddleware(
     app,
-    exporter=customexporter,
+    exporter=AzureExporter(connection_string=connection_string),
     sampler=ProbabilitySampler(rate=1.0)
 )
 
-
-# Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
 
 if ("VOTE1VALUE" in os.environ and os.environ['VOTE1VALUE']):
@@ -116,7 +113,7 @@ def index():
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
-            logger.warning('Dog Vote', extra=properties)
+            logger.warning('Dogs Vote', extra=properties)
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
@@ -129,7 +126,9 @@ def index():
             # Get current values
             vote1 = r.get(button1).decode('utf-8')
             vote2 = r.get(button2).decode('utf-8')
-            logger.warning('Reset')
+            
+            properties = {'custom_dimensions': {'Cats Vote': vote1, 'Dogs Vote': vote2}}
+            logger.warning('Votes reset', extra=properties)
 
             # Return results
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
