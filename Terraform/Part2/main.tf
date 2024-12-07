@@ -97,8 +97,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     type                 = "CustomScript"
     type_handler_version = "2.0"
     settings = jsonencode({
-      commandToExecute = "git clone https://github.com/wanghongran2023/Azure_AKS_VMSS_Management.git"
-      #commandToExecute = "git clone https://github.com/wanghongran2023/Azure_AKS_VMSS_Management.git && cd Azure_AKS_VMSS_Management && sh setnginx.sh && sh setup.sh"
+      #commandToExecute = "git clone https://github.com/wanghongran2023/Azure_AKS_VMSS_Management.git"
+      commandToExecute = "git clone https://github.com/wanghongran2023/Azure_AKS_VMSS_Management.git && cd Azure_AKS_VMSS_Management && sh setup.sh"
     })
   }
 
