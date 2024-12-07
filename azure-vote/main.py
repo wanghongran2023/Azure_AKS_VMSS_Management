@@ -22,40 +22,32 @@ from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # TODO: Import required libraries for App Insights
 
-
-# Logging
+connection_string = "InstrumentationKey=f16ce022-2be0-4182-9b24-b790e69eda4b;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=1074208d-b635-4123-874e-ff755a5149de"
 logger = logging.getLogger(__name__)
-handler = AzureEventHandler(
-    connection_string='InstrumentationKey=4728eb20-5c94-431a-8407-8bab6eb5415a;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=db22bfd1-60b4-4a46-9631-4cc8481c4eef'
-)
-handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
-logger.addHandler(handler)
+logger.setLevel(logging.INFO)
+log_handler = AzureLogHandler(connection_string=connection_string)
+event_handler = AzureEventHandler(connection_string=connection_string)
+formatter = logging.Formatter('%(traceId)s %(spanId)s %(message)s')
+log_handler.setFormatter(formatter)
+event_handler.setFormatter(formatter)
+logger.addHandler(log_handler)
+logger.addHandler(event_handler)
 
-# Metrics
-exporter = metrics_exporter.new_metrics_exporter(
+app = Flask(__name__)
+metrics_exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string='InstrumentationKey=4728eb20-5c94-431a-8407-8bab6eb5415a;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=db22bfd1-60b4-4a46-9631-4cc8481c4eef'
+    connection_string=connection_string
 )
-
-customexporter=AzureExporter(connection_string='InstrumentationKey=4728eb20-5c94-431a-8407-8bab6eb5415a;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=db22bfd1-60b4-4a46-9631-4cc8481c4eef')
-
-# Tracing
 tracer = Tracer(
-    exporter=customexporter,
+    exporter=AzureExporter(connection_string=connection_string),
+    sampler=ProbabilitySampler(rate=1.0)
+)
+middleware = FlaskMiddleware(
+    app,
+    exporter=AzureExporter(connection_string=connection_string),
     sampler=ProbabilitySampler(rate=1.0)
 )
 
-app = Flask(__name__)
-
-# Requests
-#middleware = FlaskMiddleware(
-#    app,
-#    exporter=customexporter,
-#    sampler=ProbabilitySampler(rate=1.0)
-#)
-
-
-# Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
 
 if ("VOTE1VALUE" in os.environ and os.environ['VOTE1VALUE']):
@@ -83,6 +75,14 @@ if app.config['SHOWHOST'] == "true":
 # Init Redis
 if not r.get(button1): r.set(button1,0)
 if not r.get(button2): r.set(button2,0)
+
+@app.route('/health', methods=['GET'])
+def health():
+    try:
+        r.ping()
+        return "OK", 200
+    except redis.ConnectionError:
+        return "Redis connection failed", 500
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -115,7 +115,7 @@ def index():
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
-            logger.warning('Dog Vote', extra=properties)
+            logger.warning('Dogs Vote', extra=properties)
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
@@ -128,7 +128,9 @@ def index():
             # Get current values
             vote1 = r.get(button1).decode('utf-8')
             vote2 = r.get(button2).decode('utf-8')
-            logger.warning('Reset')
+            
+            properties = {'custom_dimensions': {'Cats Vote': vote1, 'Dogs Vote': vote2}}
+            logger.warning('Votes reset', extra=properties)
 
             # Return results
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
