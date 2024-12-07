@@ -26,7 +26,7 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # Logging
 logger = logging.getLogger(__name__)
 handler = AzureEventHandler(
-    connection_string='InstrumentationKey=439aa046-70cd-4ff7-8018-e0d5ed776da0;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=857fab56-fd03-4d65-9e3c-303e58fa389a'
+    connection_string='InstrumentationKey=4728eb20-5c94-431a-8407-8bab6eb5415a;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=db22bfd1-60b4-4a46-9631-4cc8481c4eef'
 )
 handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
 logger.addHandler(handler)
@@ -34,10 +34,10 @@ logger.addHandler(handler)
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string='InstrumentationKey=439aa046-70cd-4ff7-8018-e0d5ed776da0;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=857fab56-fd03-4d65-9e3c-303e58fa389a'
+    connection_string='InstrumentationKey=4728eb20-5c94-431a-8407-8bab6eb5415a;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=db22bfd1-60b4-4a46-9631-4cc8481c4eef'
 )
 
-customexporter=AzureExporter(connection_string='InstrumentationKey=439aa046-70cd-4ff7-8018-e0d5ed776da0;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=857fab56-fd03-4d65-9e3c-303e58fa389a')
+customexporter=AzureExporter(connection_string='InstrumentationKey=4728eb20-5c94-431a-8407-8bab6eb5415a;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=db22bfd1-60b4-4a46-9631-4cc8481c4eef')
 
 # Tracing
 tracer = Tracer(
@@ -48,11 +48,11 @@ tracer = Tracer(
 app = Flask(__name__)
 
 # Requests
-middleware = FlaskMiddleware(
-    app,
-    exporter=customexporter,
-    sampler=ProbabilitySampler(rate=1.0)
-)
+#middleware = FlaskMiddleware(
+#    app,
+#    exporter=customexporter,
+#    sampler=ProbabilitySampler(rate=1.0)
+#)
 
 
 # Load configurations from environment or config file
