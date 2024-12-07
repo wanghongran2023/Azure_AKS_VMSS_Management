@@ -190,7 +190,13 @@ jobs:
           inlineScript: |
             az account show
             az storage -h
-          
+            
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.26.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+      
       - name: Build and Upload Docker Image for Deploy
         run: |
           ACR_REGISTRY=$(cat acr_login_server.txt)
