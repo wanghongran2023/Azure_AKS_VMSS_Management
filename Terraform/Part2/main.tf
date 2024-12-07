@@ -31,7 +31,7 @@ module "baston" {
   source = "./baston"
   resource_group_name=data.azurerm_resource_group.resource_group.name
   resource_group_location=data.azurerm_resource_group.resource_group.location
-  resource_header="wangudacity-vmss"
+  subnet_id=module.network.
 }
 
 module "loadbalancer" {
