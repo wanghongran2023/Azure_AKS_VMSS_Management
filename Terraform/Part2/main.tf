@@ -72,35 +72,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
 
   disable_password_authentication = false
 
-  custom_data = base64encode(<<-EOT
-    package_upgrade: true
-    packages:
-      - nginx
-      - python3-pip
-      - unzip
-      - redis-server
-    write_files:
-      - owner: www-data:www-data
-        path: /etc/nginx/sites-available/reverse-proxy.conf
-        content: |
-          server {
-            listen 80;
-            location / {
-              proxy_pass http://localhost:5000;
-              proxy_http_version 1.1;
-              proxy_set_header Upgrade $http_upgrade;
-              proxy_set_header Connection keep-alive;
-              proxy_set_header Host $host;
-              proxy_cache_bypass $http_upgrade;
-            }
-          }
-    runcmd:
-      - sudo unlink /etc/nginx/sites-enabled/default
-      - sudo ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf
-      - sudo service nginx restart
-    EOT
-  )
-
   network_interface {
     name     = "vmss-nic"
     primary  = true
