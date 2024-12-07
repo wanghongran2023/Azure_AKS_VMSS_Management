@@ -1,5 +1,5 @@
 resource "azurerm_container_registry" "acr" {
-  name                = "${var.resource_header}-acr"
+  name                = "${var.resource_header}acr"
   resource_group_name = var.resource_group_name
   location            = var.resource_group_location
   sku                 = "Basic"
@@ -7,7 +7,7 @@ resource "azurerm_container_registry" "acr" {
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "${var.resource_header}-aks"
+  name                = "${var.resource_header}aks"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
   dns_prefix          = "exampleaks"
