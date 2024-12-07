@@ -19,7 +19,7 @@ resource "azurerm_network_interface" "bastonnic" {
   }
 }
 
-resource "azurerm_linux_virtual_machine" "example" {
+resource "azurerm_linux_virtual_machine" "baston" {
   name                  = "baston-vm"
   location              = var.resource_group_location
   resource_group_name   = var.resource_group_name
