@@ -208,5 +208,6 @@ jobs:
         run: |
           docker tag azure-vote-front:v1 $ACR_REGISTRY/azure-vote-front:v1
           docker push $ACR_REGISTRY/azure-vote-front:v1
-          docker tag mcr.microsoft.com/oss/bitnami/redis:6.0.8 $ACR_REGISTRY/mcr.microsoft.com/oss/bitnami/redis:6.0.8:latest
-          docker push $ACR_REGISTRY/mcr.microsoft.com/oss/bitnami/redis:6.0.8:latest
+
+          docker tag mcr.microsoft.com/oss/bitnami/redis:6.0.8 $ACR_REGISTRY/bitnami-redis:6.0.8
+          docker push $ACR_REGISTRY/bitnami-redis:6.0.8
