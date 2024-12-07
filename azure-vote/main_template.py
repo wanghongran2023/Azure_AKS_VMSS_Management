@@ -48,11 +48,11 @@ tracer = Tracer(
 app = Flask(__name__)
 
 # Requests
-#middleware = FlaskMiddleware(
-#    app,
-#    exporter=customexporter,
-#    sampler=ProbabilitySampler(rate=1.0)
-#)
+middleware = FlaskMiddleware(
+    app,
+    exporter=customexporter,
+    sampler=ProbabilitySampler(rate=1.0)
+)
 
 
 # Load configurations from environment or config file
