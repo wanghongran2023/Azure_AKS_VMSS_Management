@@ -147,6 +147,13 @@ jobs:
             exit 1
           fi
           echo "$acr_login_server" > acr_login_server.txt
+          
+          acr_name=$(terraform output -raw acr_name)
+          if [ -z "$acr_name" ]; then
+            echo "Error: acr_name string is empty!"
+            exit 1
+          fi
+          echo "$acr_name" > acr_name.txt
 
       - name: Upload Acr Login Server as artifact
         uses: actions/upload-artifact@v4
@@ -154,6 +161,7 @@ jobs:
           name: acr_login_server
           path: |
             ./Terraform/Part2/acr_login_server.txt
+            ./Terraform/Part2/acr_name.txt
         
   DeployImageForAKS:
     name: Build Image for AKS
@@ -162,6 +170,11 @@ jobs:
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
+        
+      - name: Download Acr Login Server artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: acr_login_server
 
       - name: Log in to Azure
         uses: azure/login@v1
@@ -180,7 +193,14 @@ jobs:
           
       - name: Build and Upload Docker Image for Deploy
         run: |
-          ACR_REGISTRY=$(cat ../acr_login_server.txt)
-          az acr login --name ${{ secrets.ACR_NAME }}
-          docker build -t $ACR_REGISTRY/azure-function:latest .
-          docker push $ACR_REGISTRY/azure-function:latest
+          ACR_REGISTRY=$(cat acr_login_server.txt)
+          ACR_NAME=$(cat acr_name.txt)
+          az acr login --name $ACR_NAME
+          docker-compose up -d --build
+
+      - name: Push Image
+        run: |
+          docker tag azure-vote-front:v1 $ACR_REGISTRY/azure-vote-front:v1
+          docker push $ACR_REGISTRY/azure-vote-front:v1
+          docker tag mcr.microsoft.com/oss/bitnami/redis:6.0.8 $ACR_REGISTRY/mcr.microsoft.com/oss/bitnami/redis:6.0.8:latest
+          docker push $ACR_REGISTRY/mcr.microsoft.com/oss/bitnami/redis:6.0.8:latest
