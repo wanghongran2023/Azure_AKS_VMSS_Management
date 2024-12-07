@@ -22,12 +22,9 @@ from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # TODO: Import required libraries for App Insights
 
-
+connection_string = "{tmp_connection_string}"
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-
-connection_string = "{tmp_connection_string}"
-
 log_handler = AzureLogHandler(connection_string=connection_string)
 event_handler = AzureEventHandler(connection_string=connection_string)
 formatter = logging.Formatter('%(traceId)s %(spanId)s %(message)s')
@@ -36,18 +33,15 @@ event_handler.setFormatter(formatter)
 logger.addHandler(log_handler)
 logger.addHandler(event_handler)
 
+app = Flask(__name__)
 metrics_exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
     connection_string=connection_string
 )
-
 tracer = Tracer(
     exporter=AzureExporter(connection_string=connection_string),
     sampler=ProbabilitySampler(rate=1.0)
 )
-
-app = Flask(__name__)
-
 middleware = FlaskMiddleware(
     app,
     exporter=AzureExporter(connection_string=connection_string),
