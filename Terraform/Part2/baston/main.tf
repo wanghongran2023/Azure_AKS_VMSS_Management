@@ -26,7 +26,7 @@ resource "azurerm_linux_virtual_machine" "baston" {
   network_interface_ids = [azurerm_network_interface.bastionnic.id]
   size                  = "Standard_DS1_v2"
 
-  admin_username = "admin"
+  admin_username = "myadmin"
   admin_password = "ExampleP@ssword123!!"
 
   disable_password_authentication = false
