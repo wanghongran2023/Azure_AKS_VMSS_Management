@@ -109,7 +109,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
       name                                   = "vmss-ip-config"
       primary                                = true
       subnet_id                              = module.network.subnet_id
-      load_balancer_backend_address_pool_ids = [azurerm_lb.example.backend_address_pool[0].id]
+      load_balancer_backend_address_pool_ids = [module.loadbalancer.backend_address_pool[0].id]
     }
   }
 
