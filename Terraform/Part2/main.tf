@@ -48,7 +48,6 @@ module "aks" {
   resource_header="wangudacity"
 }
 
-
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "udacity-vmss"
   location            = data.azurerm_resource_group.resource_group.location
@@ -56,9 +55,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
 
   admin_username       = "myadmin"
   admin_password       = "MyP@ssw0rd123!"
-
-  instances = 2
-  sku       = "Standard_DS1_v2"
+  instances            = 2
+  sku                  = "Standard_DS1_v2"
 
   source_image_reference {
     publisher = "Canonical"
@@ -74,16 +72,44 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
 
   disable_password_authentication = false
 
+  custom_data = base64encode(<<-EOT
+    package_upgrade: true
+    packages:
+      - nginx
+      - python3-pip
+      - unzip
+      - redis-server
+    write_files:
+      - owner: www-data:www-data
+        path: /etc/nginx/sites-available/reverse-proxy.conf
+        content: |
+          server {
+            listen 80;
+            location / {
+              proxy_pass http://localhost:5000;
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection keep-alive;
+              proxy_set_header Host $host;
+              proxy_cache_bypass $http_upgrade;
+            }
+          }
+    runcmd:
+      - sudo unlink /etc/nginx/sites-enabled/default
+      - sudo ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf
+      - sudo service nginx restart
+    EOT
+  )
+
   network_interface {
-    name="vmss-nic"
-    primary = true
+    name     = "vmss-nic"
+    primary  = true
 
     ip_configuration {
       name                                   = "vmss-ip-config"
       primary                                = true
       subnet_id                              = module.network.subnet_id
-      load_balancer_backend_address_pool_ids = [module.loadbalancer.backend_pool_id]
-      public_ip_address_id = azurerm_public_ip.vmss_public_ip.id
+      load_balancer_backend_address_pool_ids = [azurerm_lb.example.backend_address_pool[0].id]
     }
   }
 
@@ -94,7 +120,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     type_handler_version = "2.0"
     settings = jsonencode({
       commandToExecute = "git clone https://github.com/wanghongran2023/Azure_AKS_VMSS_Management.git && cd Azure_AKS_VMSS_Management && sh setup.sh"
-      #commandToExecute = "git clone https://github.com/wanghongran2023/Azure_AKS_VMSS_Management.git"
     })
   }
 
@@ -102,14 +127,3 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     environment = "Test"
   }
 }
-
-resource "azurerm_public_ip" "vmss_public_ip" {
-  count               = 4
-  name                = "vmss-public-ip-${count.index}"
-  location            = data.azurerm_resource_group.resource_group.location
-  resource_group_name = data.azurerm_resource_group.resource_group.name
-  allocation_method   = "Dynamic"
-  sku                 = "Basic"
-  domain_name_label   = "vmss-${count.index}"
-}
-
