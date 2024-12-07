@@ -22,4 +22,5 @@ sudo python3 -m pip install setuptools-rust
 sudo pip3 install -r requirements.txt
 
 cd azure-vote/
-sudo nohup python3 main.py > app.log 2>&1 &
+#sudo nohup python3 main.py > app.log 2>&1 &
+python3 main.py
